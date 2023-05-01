@@ -63,38 +63,30 @@ public class Simulator {
 
     private int assemble(String instruction) throws Exception {
         String[] tokens = instruction.split(" ");
-    
+
         if (tokens.length != INSTRUCTION_SIZE) {
             throw new Exception("Invalid instruction: " + instruction);
         }
-    
+
         String opcode = tokens[0].toUpperCase();
         String arg1 = tokens[1].toUpperCase();
         String arg2 = tokens[2].toUpperCase();
-    
+
         switch (opcode) {
             case "LDA":
-                registers[getRegisterIndex(arg1)] = getValue(arg2);
+                int value = getValue(arg2);
+                registers[getRegisterIndex(arg1)] = value;
                 return 0;
             case "ADD":
-                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] + getValue(arg2);
+                int result = registers[getRegisterIndex(arg1)] + getValue(arg2);
+                registers[getRegisterIndex(arg1)] = result;
                 return 1;
-            case "STR":
-                memory[variableMap.get(arg2)] = registers[getRegisterIndex(arg1)];
-                return 3;
-            case "PUSH":
-                int operandValue = getValue(arg1);
-                int stackTop = registers[3];
-                memory[stackTop] = operandValue;
-                registers[3] -= 1;
-                return 4;
             case "HLT":
                 return 2;
             default:
                 throw new Exception("Invalid opcode: " + opcode);
         }
     }
-
 
     private int getValue(String operand) throws Exception {
         if (operand.startsWith("T")) {
@@ -139,17 +131,36 @@ public class Simulator {
     
             switch (opcode) {
                 case "LDA":
-                    int value = getValue(arg2);
-                    registers[getRegisterIndex(arg1)] = value;
+                    registers[getRegisterIndex(arg1)] = getValue(arg2);
                     pc += INSTRUCTION_SIZE;
                     break;
                 case "ADD":
-                    int result = registers[getRegisterIndex(arg1)] + getValue(arg2);
-                    registers[getRegisterIndex(arg1)] = result;
+                    registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] + getValue(arg2);
                     pc += INSTRUCTION_SIZE;
                     break;
                 case "HLT":
                     return;
+                case "AND":
+                    
+                    pc += INSTRUCTION_SIZE;
+                    break;
+                case "OR":
+                    
+                    pc += INSTRUCTION_SIZE;
+                    break;
+                case "SUB":
+                    registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] - getValue(arg2);
+                    pc += INSTRUCTION_SIZE;
+                    break;
+                case "MUL":
+                    registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] * getValue(arg2);
+                    pc += INSTRUCTION_SIZE;
+                    break;
+                case "DIV":
+                    registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] - getValue(arg2);
+                    pc += INSTRUCTION_SIZE;
+                    break;
+                    
                 default:
                     throw new Exception("Invalid opcode: " + opcode);
             }
