@@ -63,30 +63,38 @@ public class Simulator {
 
     private int assemble(String instruction) throws Exception {
         String[] tokens = instruction.split(" ");
-
+    
         if (tokens.length != INSTRUCTION_SIZE) {
             throw new Exception("Invalid instruction: " + instruction);
         }
-
+    
         String opcode = tokens[0].toUpperCase();
         String arg1 = tokens[1].toUpperCase();
         String arg2 = tokens[2].toUpperCase();
-
+    
         switch (opcode) {
             case "LDA":
-                int value = getValue(arg2);
-                registers[getRegisterIndex(arg1)] = value;
+                registers[getRegisterIndex(arg1)] = getValue(arg2);
                 return 0;
             case "ADD":
-                int result = registers[getRegisterIndex(arg1)] + getValue(arg2);
-                registers[getRegisterIndex(arg1)] = result;
+                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] + getValue(arg2);
                 return 1;
+            case "STR":
+                memory[variableMap.get(arg2)] = registers[getRegisterIndex(arg1)];
+                return 3;
+            case "PUSH":
+                int operandValue = getValue(arg1);
+                int stackTop = registers[3];
+                memory[stackTop] = operandValue;
+                registers[3] -= 1;
+                return 4;
             case "HLT":
                 return 2;
             default:
                 throw new Exception("Invalid opcode: " + opcode);
         }
     }
+
 
     private int getValue(String operand) throws Exception {
         if (operand.startsWith("T")) {
