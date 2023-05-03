@@ -79,6 +79,8 @@ public class Simulator {
             case "ADD":
                 registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] + getValue(arg2);
                 return 1;
+            case "HLT":
+                return 2;
             case "STR":
                 memory[variableMap.get(arg2)] = registers[getRegisterIndex(arg1)];
                 return 3;
@@ -88,8 +90,45 @@ public class Simulator {
                 memory[stackTop] = operandValue;
                 registers[3] -= 1;
                 return 4;
-            case "HLT":
-                return 2;
+            
+            case "POP":
+                int stackTop = registers[3] + 1;
+                int poppedValue = memory[stackTop];
+                registers[getRegisterIndex(arg1)] = poppedValue;
+                return 4;
+                default:
+                System.out.println("Invalid instruction: " + instruction);
+                return -1;
+
+            case "AND":
+                return 5;
+            case "OR":
+                return 6;
+            case "NOT":
+                return 7;
+            case "SUB":
+                return 9;
+            case "DIV":
+                return 7;
+            case "MUL":
+                return 7;
+            case "MOD":
+                return 7; 
+            case "INC":
+                return 7; 
+            case "DEC":
+                return 7; 
+            case "BEQ":
+                return 7; 
+            case "BNE":
+                return 7; 
+            case "BBG":
+                return 7; 
+            case "BSM":
+                return 7; 
+            case "JMP":
+                return 7; 
+                             
             default:
                 throw new Exception("Invalid opcode: " + opcode);
         }
@@ -149,7 +188,9 @@ public class Simulator {
                     pc += INSTRUCTION_SIZE;
                     break;
                 case "HLT":
-                    return;
+                    break;
+                case "PUSH":
+                    break;
                 default:
                     throw new Exception("Invalid opcode: " + opcode);
             }
