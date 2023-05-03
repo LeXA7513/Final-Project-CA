@@ -4,6 +4,11 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 class Interface {
     public static void main(String[] args) {
         JFrame f = new JFrame("Assembly Simulator");
@@ -62,6 +67,22 @@ class Interface {
         JButton button = new JButton("Load File");
         button.setBounds(400, 280, 150, 30);
 
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
+                    System.out.print(filePath);
+                    Simulator simulator = new Simulator(filePath);
+                    // You can add code here to update the UI with the loaded program information
+                }
+            }
+        });
         JButton button2 = new JButton("Check File");
         button2.setBounds(400, 320, 150, 30);
 

@@ -32,15 +32,17 @@ public class Simulator {
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-
+                
                 if (line.startsWith("!") || line.isEmpty()) {
                     // Ignore comments and empty lines
                     continue;
-                } else if (line.startsWith("#data")) {
-                    isDataSection = true;
-                    continue;
-                } else if (line.startsWith("#code")) {
-                    isDataSection = false;
+                } else if (line.startsWith("#")) {
+                    if (line.equals("#DATA")){
+                    isDataSection = true;}
+                    else if (line.equals("#CODE"))
+                    {
+                        isDataSection = false;
+                    }
                     continue;
                 }
 
@@ -53,6 +55,8 @@ public class Simulator {
                     memory[pc] = assemble(line);
                     pc += INSTRUCTION_SIZE;
                 }
+                
+                
             }
 
             reader.close();
@@ -71,7 +75,7 @@ public class Simulator {
         String opcode = tokens[0].toUpperCase();
         String arg1 = tokens[1].toUpperCase();
         String arg2 = tokens[2].toUpperCase();
-    
+        int stackTop ;
         switch (opcode) {
             case "LDA":
                 registers[getRegisterIndex(arg1)] = getValue(arg2);
@@ -82,17 +86,17 @@ public class Simulator {
             case "HLT":
                 return 2;
             case "STR":
-                memory[variableMap.get(arg2)] = registers[getRegisterIndex(arg1)];
+                memory[variableMap.get(arg1)] = registers[getRegisterIndex(arg2)];
                 return 3;
             case "PUSH":
                 int operandValue = getValue(arg1);
-                int stackTop = registers[3];
+                stackTop = registers[3];
                 memory[stackTop] = operandValue;
                 registers[3] -= 1;
                 return 4;
             
             case "POP":
-                int stackTop = registers[3] + 1;
+                stackTop = registers[3] + 1;
                 int poppedValue = memory[stackTop];
                 registers[getRegisterIndex(arg1)] = poppedValue;
                 return 4;
@@ -127,10 +131,9 @@ public class Simulator {
             case "BSM":
                 return 7; 
             case "JMP":
-                return 7; 
-                             
-            default:
-                throw new Exception("Invalid opcode: " + opcode);
+                return 7;                   
+ //           default:
+  //              throw new Exception("Invalid opcode: " + opcode);
         }
     }
 
