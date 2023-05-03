@@ -1,13 +1,13 @@
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
-
-import java.awt.*;
-import java.awt.event.*;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.File;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
+
 
 class Interface {
     public static void main(String[] args) {
@@ -25,7 +25,8 @@ class Interface {
         JLabel label13 = new JLabel("Code");
         label13.setBounds(50, 115, 100, 30);
 
-        JTextField textField1 = new JTextField();
+        JTextArea textField1 = new JTextArea();
+        textField1.setEditable(false);
         textField1.setBounds(50, 140, 150, 80);
 
         JLabel label14 = new JLabel("Registers");
@@ -75,11 +76,20 @@ class Interface {
 
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    String filePath = selectedFile.getAbsolutePath();
-                    System.out.print(filePath);
-                    Simulator simulator = new Simulator(filePath);
-                    // You can add code here to update the UI with the loaded program information
+                    try {
+                        FileReader reader = new FileReader(fileChooser.getSelectedFile());
+                        BufferedReader br = new BufferedReader(reader);
+                        textField1.read(br, null);
+                        br.close();
+                        textField1.requestFocus();
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String filePath = selectedFile.getAbsolutePath();
+                        new Simulator(filePath);
+                        // You can add code here to update the UI with the loaded program information
+                    } catch (IOException ex) {
+                        System.out.println("Error reading file: " + ex.getMessage());
+                    }
+                    
                 }
             }
         });
