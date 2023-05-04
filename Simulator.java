@@ -12,7 +12,7 @@ public class Simulator {
     public String[] memorybinary;
     private int[] registers;
     private int pc;
-    private int numberlineCode, numberVar;
+    private int numberlineCode, numberVar, LimitCode;
 
     private Map<String, Integer> variableMap;
 
@@ -76,21 +76,19 @@ public class Simulator {
                             memorybinary[n+i]= lettres[i] ;
                         }
                         n += lettres.length;
-                   /* memory[pc] = assemble(line);
-                    String[] tokens = line.split(" ");
-                    pc += tokens.length;*/
                 }
                 
                 
             }
-            int LimitCode = n ;
+            LimitCode = n ;
 
             reader.close();/* 
             String text = "";
             for(i=0;i<48;i++){
              text =text + memorybinary[i] +" ";
-            }
-        System.out.println(text);
+            }*/
+        
+        /*
         System.out.println(binaryConversion.fromBinaryText(text));
         System.out.println(binaryConversion.fromBinaryNumber("00000000000000000000000000000000")); 
         System.out.println(binaryConversion.fromBinaryText("01010011 01000101 01010010 ")); 
@@ -103,21 +101,47 @@ public class Simulator {
             e.printStackTrace();
         }
     }
+    private void checkProgram(String code) throws Exception {
+        String[] lines = binaryConversion.toBinaryText(get.getCode(this)).split("00001101 00001010");
+        for (int i=1;i<lines.length;i++){
+            StringBuilder MyString = new StringBuilder(lines[i]);
+            lines[i] = MyString.deleteCharAt(0).toString();
+        }
+        for (String line : lines) {
+            String[] tokens = line.split(" ");
+            String opcode = tokens[0].toUpperCase();
+            if (tokens.length != get.getInstructionSize(opcode)) {
+                throw new Exception("Invalid size instruction: " + line);
+            }
+            String arg1 ="", arg2="", arg3="";
+            if(get.getInstructionSize(opcode)==2){
+                arg1 = tokens[1].toUpperCase();
+            }else if(get.getInstructionSize(opcode)==3){
+                arg1 = tokens[1].toUpperCase();
+                arg2 = tokens[2].toUpperCase();
+            } else if (get.getInstructionSize(opcode)==4){
+                arg1 = tokens[1].toUpperCase();
+                arg2 = tokens[2].toUpperCase();
+                arg3 = tokens[3].toUpperCase();
+            }
+        }
 
+        
+    }
     private int assemble(String instruction) throws Exception {
         String[] tokens = instruction.split(" ");
         String opcode = tokens[0].toUpperCase();
-        if (tokens.length != getIntsructionSize(opcode)) {
-            throw new Exception("Invalid size intrustion: " + instruction);
+        if (tokens.length != get.getInstructionSize(opcode)) {
+            throw new Exception("Invalid size instruction: " + instruction);
         }
         
         String arg1 ="", arg2="", arg3="";
-        if(getIntsructionSize(opcode)==2){
+        if(get.getInstructionSize(opcode)==2){
             arg1 = tokens[1].toUpperCase();
-        }else if(getIntsructionSize(opcode)==3){
+        }else if(get.getInstructionSize(opcode)==3){
             arg1 = tokens[1].toUpperCase();
             arg2 = tokens[2].toUpperCase();
-        } else if (getIntsructionSize(opcode)==4){
+        } else if (get.getInstructionSize(opcode)==4){
             arg1 = tokens[1].toUpperCase();
             arg2 = tokens[2].toUpperCase();
             arg3 = tokens[3].toUpperCase();
@@ -127,15 +151,15 @@ public class Simulator {
         int stackTop ;
         switch (opcode) {
             case "LDA":
-                registers[getRegisterIndex(arg1)] = getValue(arg2);
+                registers[get.getRegisterIndex(arg1)] = getValue(arg2);
                 return 0;
             case "ADD":
-                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] + getValue(arg2);
+                registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] + getValue(arg2);
                 return 1;
             case "HLT":
                 return 2;
             case "STR":
-                memory[variableMap.get(arg1)] = registers[getRegisterIndex(arg2)];
+                memory[variableMap.get(arg1)] = registers[get.getRegisterIndex(arg2)];
                 return 3;
             case "PUSH":
                 int operandValue = getValue(arg1);
@@ -146,7 +170,7 @@ public class Simulator {
             case "POP":
                 stackTop = registers[3] + 1;
                 int poppedValue = memory[stackTop];
-                registers[getRegisterIndex(arg1)] = poppedValue;
+                registers[get.getRegisterIndex(arg1)] = poppedValue;
                 return 4;
             case "AND":
                 return 5;
@@ -185,7 +209,7 @@ public class Simulator {
 
     private int getValue(String operand) throws Exception {
         if (operand.startsWith("T")) {
-            return registers[getRegisterIndex(operand)];
+            return registers[get.getRegisterIndex(operand)];
         } else if (variableMap.containsKey(operand)) {
             return variableMap.get(operand);
         } else if (operand.startsWith("#")) {
@@ -199,71 +223,7 @@ public class Simulator {
         }
     }
 
-    private int getRegisterIndex(String registerName) throws Exception {
-        switch (registerName.toUpperCase()) {
-            case "T0":
-                return 0;
-            case "T1":
-                return 1;
-            case "T2":
-                return 2;
-            case "T3":
-                return 3;
-            default:
-                throw new Exception("Invalid register name: " + registerName);
-        }
-    }
 
-    private int getIntsructionSize(String opcode) throws Exception {
-        switch (opcode.toUpperCase()) {
-            case "LDA":
-                return 3;
-            case "STR":
-                return 3;
-            case "PUSH":
-                return 2;
-            case "POP":
-                return 2;
-            case "AND":
-                return 3;
-            case "OR":
-                return 3;
-            case "NOT":
-                return 2;
-            case "ADD":
-                return 3;
-            case "SUB":
-                return 3;
-            case "DIV":
-                return 3;
-            case "MUL":
-                return 3;
-            case "MOD":
-                return 3;
-            case "INC":
-                return 2;
-            case "DEC":
-                return 2;
-            case "BEQ":
-                return 4;
-            case "BNE":
-                return 4;
-            case "BBG":
-                return 4;
-            case "BSM":
-                return 4;
-            case "JMP":
-                return 2;
-            case "HLT":
-                return 1;
-            case "SRL":
-                return 3;
-            case "SRR":
-                return 3;
-            default:
-                throw new Exception("Invalid opcode: " + opcode);
-        }
-    }
 
     public void run() throws Exception {
         pc = 0;
@@ -278,13 +238,13 @@ public class Simulator {
             switch (opcode) {
                 case "LDA":
                     int value = getValue(arg2);
-                    registers[getRegisterIndex(arg1)] = value;
-                    pc += getIntsructionSize(opcode);
+                    registers[get.getRegisterIndex(arg1)] = value;
+                    pc += get.getInstructionSize(opcode);
                     break;
                 case "ADD":
-                    int result = registers[getRegisterIndex(arg1)] + getValue(arg2);
-                    registers[getRegisterIndex(arg1)] = result;
-                    pc += getIntsructionSize(opcode);
+                    int result = registers[get.getRegisterIndex(arg1)] + getValue(arg2);
+                    registers[get.getRegisterIndex(arg1)] = result;
+                    pc += get.getInstructionSize(opcode);
                     break;
                 case "HLT":
                     break;
