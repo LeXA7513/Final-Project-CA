@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
 import javax.swing.JFileChooser;
@@ -78,14 +77,22 @@ class Interface {
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
                         FileReader reader = new FileReader(fileChooser.getSelectedFile());
-                        BufferedReader br = new BufferedReader(reader);
-                        textField1.read(br, null);
-                        br.close();
-                        textField1.requestFocus();
                         File selectedFile = fileChooser.getSelectedFile();
                         String filePath = selectedFile.getAbsolutePath();
-                        new Simulator(filePath);
-                        // You can add code here to update the UI with the loaded program information
+                        Simulator Simulate = new Simulator(filePath);
+                        String text = "";
+                        for(int i=0;i<Simulate.MEMORY_SIZE;i++){
+                        if(Simulate.memorybinary[i] != null){
+                            text =text + Simulate.memorybinary[i] +" ";
+                        }
+                        else{
+                            text = binaryConversion.fromBinaryText(text);
+                            break;
+                        }
+                        }
+                        textField1.append(text);
+                        textField1.requestFocus();
+                        
                     } catch (IOException ex) {
                         System.out.println("Error reading file: " + ex.getMessage());
                     }
