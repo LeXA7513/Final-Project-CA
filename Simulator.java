@@ -140,7 +140,7 @@ public class Simulator {
         switch (opcode) {
             case "LDA":
                 registers[get.getRegisterIndex(arg1)] = getValue(arg2);
-                return 0;
+                return 1;
             case "ADD":
                 registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] + getValue(arg2);
                 return 1;
@@ -148,46 +148,72 @@ public class Simulator {
                 return 2;
             case "STR":
                 memory[variableMap.get(arg1)] = registers[get.getRegisterIndex(arg2)];
-                return 3;
+                return 1;
             case "PUSH":
                 int operandValue = getValue(arg1);
                 stackTop = registers[3];
                 memory[stackTop] = operandValue;
                 registers[3] -= 1;
-                return 4;
+                return 1;
             case "POP":
                 stackTop = registers[3] + 1;
                 int poppedValue = memory[stackTop];
                 registers[get.getRegisterIndex(arg1)] = poppedValue;
-                return 4;
+                return 1;
             case "AND":
-                return 5;
+                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] & getValue(arg2);
+                return 1;  
             case "OR":
-                return 6;
+                int orOperandValue = getValue(arg2);
+                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] | orOperandValue;
+                return 1;
             case "NOT":
-                return 7;
+                int argVal = registers[getRegisterIndex(arg1)];
+                registers[getRegisterIndex(arg1)] =  ~argVal; 
+                return 1;
             case "SUB":
-                return 9;
+                int arg1Val = registers[getRegisterIndex(arg1)];
+                int arg2Val = getValue(arg2);
+                int result = arg2Val - arg1Val;
+                registers[getRegisterIndex(arg1)] = result;
+                return 1;
             case "DIV":
-                return 7;
+                int dividend = registers[getRegisterIndex(arg2)];
+                int divisor = getValue(arg1);
+                if (divisor == 0) {
+                System.out.println("Error: Division by zero");
+                return -1;
+                }
+                registers[getRegisterIndex(arg1)] = dividend / divisor;
+                return 1;
             case "MUL":
-                return 7;
+                int arg1Val = registers[getRegisterIndex(arg1)];
+                int arg2Val = getValue(arg2);
+                int result = arg1Val * arg2Val;
+                registers[getRegisterIndex(arg1)] = result;
+                return 1;
             case "MOD":
-                return 7; 
+                int arg1ValMod = registers[getRegisterIndex(arg1)];
+                int arg2ValMod = getValue(arg2);
+                int resultMod = arg2ValMod % arg1ValMod;
+            r   egisters[getRegisterIndex(arg1)] = resultMod;
+                return 1; 
             case "INC":
-                return 7; 
+                registers[getRegisterIndex(arg1)]++;
+                return 1; 
             case "DEC":
-                return 7; 
+            registers[getRegisterIndex(arg1)]--;
+                return 1; 
             case "BEQ":
-                return 7; 
+                return 1; 
             case "BNE":
-                return 7; 
+                return 1; 
             case "BBG":
-                return 7; 
+                return 1; 
             case "BSM":
-                return 7; 
+                return 1; 
             case "JMP":
-                return 7;
+                return 1;
             default:
                 System.out.println("Invalid instruction: " + instruction);
                 return -1;                   
