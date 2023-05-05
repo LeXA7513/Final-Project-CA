@@ -12,6 +12,39 @@ public class get {
             }  
         return text;
     }
+    public static String getData(Simulator simulate) {
+        String text = "";
+        Boolean notend = true;
+        int compteur = 0, repere;
+
+        for(int i=simulate.MEMORY_SIZE-1;i>0;i--){
+            repere = i;
+            if(simulate.memorybinary[i] != null){
+                if(compteur == 0){
+                    text =text + binaryConversion.fromBinaryText(simulate.memorybinary[i]);
+                } else if(compteur==1) {
+                    compteur = 0;
+                    String nombre = "";
+                    for (int a=repere;a>repere-4;a--){
+                        nombre = simulate.memorybinary[a] + nombre;
+                    }
+                    i = i-4;
+                    text =text +" "+ binaryConversion.fromBinaryNumber(nombre)+binaryConversion.fromBinaryText("00001101 00001010");
+                }    
+            }
+            else if(notend){
+                compteur ++;
+                text = text + " ";
+                if (compteur==2){
+                    notend = false;
+                }
+            }
+            else{
+                break;
+            }
+            }
+        return text;
+    }
     public static int getRegisterIndex(String registerName) throws Exception {
         switch (registerName.toUpperCase()) {
             case "T0":

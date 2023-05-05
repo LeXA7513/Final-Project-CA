@@ -38,7 +38,15 @@ public class binaryConversion
     }
  
     public static int fromBinaryNumber(String binary) {
-        return Integer.parseInt(binary, 2);
+        int sign = binary.charAt(0) == '1' ? -1 : 1;
+        int decimal = 0;
+        for (int i = 1; i < binary.length(); i++) {
+            decimal += (binary.charAt(i) - '0') * Math.pow(2, 31 - i);
+        }
+        if (sign == -1) {
+            decimal = (int) (decimal - Math.pow(2, 31));
+        }
+        return decimal;
     }
     public static String fromBinaryText(String binary) {
         String[] parts = binary.split(" ");

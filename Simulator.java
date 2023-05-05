@@ -82,30 +82,18 @@ public class Simulator {
             }
             LimitCode = n ;
 
-            reader.close();/* 
-            String text = "";
-            for(i=0;i<48;i++){
-             text =text + memorybinary[i] +" ";
-            }*/
-        
-        /*
-        System.out.println(binaryConversion.fromBinaryText(text));
-        System.out.println(binaryConversion.fromBinaryNumber("00000000000000000000000000000000")); 
-        System.out.println(binaryConversion.fromBinaryText("01010011 01000101 01010010 ")); 
-        System.out.println(binaryConversion.fromBinaryNumber("00000000000000000000000000001111")); 
-        System.out.println(binaryConversion.fromBinaryText("01000010 "));
-        System.out.println(binaryConversion.fromBinaryNumber("00000000000000000000000000001010")); 
-        System.out.println(binaryConversion.fromBinaryText("01000001"));*/
+            reader.close(); 
 
     } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void checkProgram(String code) throws Exception {
-        String[] lines = binaryConversion.toBinaryText(get.getCode(this)).split("00001101 00001010");
+    public void checkProgram(String code) throws Exception {
+        String[] lines = binaryConversion.toBinaryText(code).split("00001101 00001010");
+        lines[0] = binaryConversion.fromBinaryText(lines[0]);
         for (int i=1;i<lines.length;i++){
             StringBuilder MyString = new StringBuilder(lines[i]);
-            lines[i] = MyString.deleteCharAt(0).toString();
+            lines[i] = binaryConversion.fromBinaryText(MyString.deleteCharAt(0).toString());
         }
         for (String line : lines) {
             String[] tokens = line.split(" ");
