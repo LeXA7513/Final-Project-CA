@@ -1,140 +1,185 @@
 import javax.swing.*;
-import java.io.FileReader;
-import java.io.File;
-import javax.swing.JFileChooser;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.*;
 
+class Interface extends JFrame{
 
+    private JLabel labelName = new JLabel("File Name");
+    private JLabel labelStatus = new JLabel("File Status");
+    private JLabel labelCode = new JLabel("Code");
+    private JTextArea textField1 = new JTextArea(20, 20); 
 
-class Interface {
-    public static void main(String[] args) {
-        JFrame f = new JFrame("Assembly Simulator");
+    private JLabel labelNextInstruction = new JLabel("Next Instruction");
+    private JLabel labelT0 = new JLabel("t0");
+    private JLabel labelT1 = new JLabel("t1");
+    private JLabel labelT2 = new JLabel("t2");
+    private JLabel labelT3 = new JLabel("t3");
+    private JLabel labelPC = new JLabel("PC");
 
-        JLabel label = new JLabel("File Info");
-        label.setBounds(50, 0, 100, 30);
+    private JLabel labelVariables = new JLabel("Variables");
+    private JTextArea textField2 = new JTextArea(10, 10);
+    private JLabel labelStack = new JLabel("Stack");
+    private JTextArea textField3 = new JTextArea(10, 10);
 
-        JLabel label11 = new JLabel("File Name");
-        label11.setBounds(50, 30, 100, 30);
+    private JButton button1 = new JButton("Load File");
+    private JButton button2 = new JButton("Check File");
+    private JButton button3 = new JButton("Simulate");
+    private JButton button4 = new JButton("Step Simulation");
 
-        JLabel label12 = new JLabel("File Status");
-        label12.setBounds(50, 75, 100, 30);
+    public Interface(){
+        super("Assembly Simulator");
+    
+        // create a content pane with BoxLayout manager
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+    
+        // create a new panel with GridBagLayout manager for file info
+        JPanel newPanel = new JPanel(new GridBagLayout());
+    
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 0, 10, 20);
+    
+        // add components to the panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        newPanel.add(labelName, constraints);
+    
+        constraints.gridy = 4;
+        newPanel.add(labelStatus, constraints);
+    
+        constraints.gridx = 0;
+        constraints.gridy = 7;
+        newPanel.add(labelCode, constraints);
+    
+        constraints.gridy = 8;
+        newPanel.add(textField1, constraints);
+    
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.gridheight = 3;
+        constraints.gridwidth = 1;
+        constraints.fill = GridBagConstraints.LINE_START;
+    
+        // set border for the panel
+        newPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "File Info"));
+    
+        // create a new panel with GridBagLayout manager for memory info
+        JPanel newPanel3 = new JPanel(new GridBagLayout());
+    
+        GridBagConstraints constraints3 = new GridBagConstraints();
+        constraints3.anchor = GridBagConstraints.WEST;
+        constraints3.insets = new Insets(10, 0, 10, 20);
+    
+        constraints3.gridy = 2;
+        newPanel3.add(labelVariables, constraints3);
 
-        JLabel label13 = new JLabel("Code");
-        label13.setBounds(50, 115, 100, 30);
-
-        JTextArea textField1 = new JTextArea();
-        textField1.setEditable(false);
-        textField1.setBounds(50, 140, 150, 80);
-
-        JLabel label14 = new JLabel("Registers");
-        label14.setBounds(50, 230, 100, 30);
-
-        JLabel label15 = new JLabel("Next instruction");
-        label15.setBounds(50, 270, 100, 30);
-
-        JLabel label16 = new JLabel("t0");
-        label16.setBounds(50, 310, 100, 30);
-
-        JLabel label17 = new JLabel("t1");
-        label17.setBounds(50, 330, 100, 30);
-
-        JLabel label18 = new JLabel("t2");
-        label18.setBounds(50, 350, 100, 30);
-
-        JLabel label19 = new JLabel("t3");
-        label19.setBounds(50, 370, 100, 30);
-
-        JLabel label120 = new JLabel("PC");  
-        label120.setBounds(50, 390, 100, 30);
-
-        JLabel label20 = new JLabel("Memory Info");
-        label20.setBounds(400, 0, 100, 30);
-
-        JLabel label21 = new JLabel("Variables");
-        label21.setBounds(400, 55, 100, 30);
-
-        JTextField textField22 = new JTextField();
-        textField22.setBounds(400, 80, 150, 80);
-
-        JLabel label23 = new JLabel("Stack");
-        label23.setBounds(400, 160, 100, 30);
-
-        JTextField textField23 = new JTextField();
-        textField23.setBounds(400, 185, 150, 80);
+        constraints3.gridy = 3;
+        newPanel3.add(textField2, constraints3);
+    
+        constraints3.gridx = 0;
+        constraints3.gridy = 4;
+        newPanel3.add(labelStack, constraints3);
         
-        JButton button = new JButton("Load File");
-        button.setBounds(400, 280, 150, 30);
+        constraints3.gridy = 5;
+        newPanel3.add(textField3, constraints3);
 
-        button.addActionListener(new ActionListener() {
+        constraints3.gridx = 1;
+        constraints3.gridy = 0;
+        constraints3.gridheight = 3;
+        constraints3.gridwidth = 1;
+        constraints3.fill = GridBagConstraints.LINE_END;
+    
+        // set border for the panel
+        newPanel3.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Memory info"));
+    
+        // create a new panel with BoxLayout manager for newPanel and newPanel3
+        JPanel containerPanel = new JPanel();
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.X_AXIS));
+    
+        // add newPanel and newPanel3 to containerPanel
+        containerPanel.add(newPanel);
+        containerPanel.add(newPanel3);
+    
+        // add containerPanel to the content pane
+        contentPane.add(containerPanel);
+
+        JPanel newPanel2 = new JPanel(new GridBagLayout());
+
+        Container contentPane2 = getContentPane();
+        contentPane2.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+
+        GridBagConstraints constraints2 = new GridBagConstraints();
+        constraints2.anchor = GridBagConstraints.WEST;
+        constraints2.insets = new Insets(10, 10, 10, 10);
+
+        // add components to the panel
+        constraints2.gridx = 0;
+        constraints2.gridy = 0;
+        newPanel2.add(labelNextInstruction, constraints2);
+
+        constraints2.gridy = 2;
+        newPanel2.add(labelT0, constraints2);
+
+        constraints2.gridx = 0;
+        constraints2.gridy = 4;
+        newPanel2.add(labelT1, constraints2);
+
+        constraints2.gridy = 6;
+        newPanel2.add(labelT2, constraints2);
+
+        constraints2.gridy = 8;
+        newPanel2.add(labelT3, constraints2);
+
+        constraints2.gridy = 10;
+        newPanel2.add(labelPC, constraints2);
+
+        constraints2.gridx = 0;
+        constraints2.gridy = 8;
+        constraints2.gridwidth = 2;
+        constraints2.anchor = GridBagConstraints.LINE_START;
+
+        // set border for the panel
+        newPanel2.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Registers"));
+
+        
+        
+
+        // create a new panel with BoxLayout manager for newPanel and newPanel3
+        JPanel containerPanel2 = new JPanel();
+        containerPanel2.setLayout(new BoxLayout(containerPanel2, BoxLayout.X_AXIS));
+    
+        // add newPanel and newPanel3 to containerPanel
+        containerPanel2.add(newPanel2);
+        containerPanel2.add(button1);
+        containerPanel2.add(button2);
+        containerPanel2.add(button3);
+        containerPanel2.add(button4);
+    
+        // add containerPanel to the content pane
+        contentPane2.add(containerPanel2);
+
+        pack();
+        setLocationRelativeTo(null);
+    }
+     
+    public static void main(String[] args) {
+        // set look and feel to the system look and feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+         
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        FileReader reader = new FileReader(fileChooser.getSelectedFile());
-                        File selectedFile = fileChooser.getSelectedFile();
-                        String filePath = selectedFile.getAbsolutePath();
-                        Simulator Simulate = new Simulator(filePath);
-                        String text = "";
-                        for(int i=0;i<Simulate.MEMORY_SIZE;i++){
-                        if(Simulate.memorybinary[i] != null){
-                            text =text + Simulate.memorybinary[i] +" ";
-                        }
-                        else{
-                            text = binaryConversion.fromBinaryText(text);
-                            break;
-                        }
-                        }
-                        textField1.append(text);
-                        textField1.requestFocus();
-                        
-                    } catch (IOException ex) {
-                        System.out.println("Error reading file: " + ex.getMessage());
-                    }
-                    
-                }
+            public void run() {
+                new Interface().setVisible(true);
             }
         });
-        JButton button2 = new JButton("Check File");
-        button2.setBounds(400, 320, 150, 30);
-
-        JButton button3 = new JButton("Simulate");
-        button3.setBounds(400, 360, 150, 30);
-
-        JButton button4 = new JButton("Step Simulation");
-        button4.setBounds(400, 400, 150, 30);
-
-        f.add(label);
-        f.add(label21);
-        f.add(label11);
-        f.add(label12);
-        f.add(label13);
-        f.add(label14);
-        f.add(label15);
-        f.add(label16);
-        f.add(label17);
-        f.add(label18);
-        f.add(label19);
-        f.add(label120);
-        f.add(textField1);
-        f.add(textField22);
-        f.add(textField23);
-        f.add(label20);
-        f.add(label21);
-        f.add(label23);
-        //f.add(textArea2);
-        f.add(button);
-        f.add(button2);
-        f.add(button3);
-        f.add(button4);
-
-        f.setSize(700,500);
-        f.setLayout(null);
-        f.setVisible(true);
     }
+    
+
 }
