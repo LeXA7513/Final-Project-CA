@@ -215,14 +215,36 @@ public class Simulator {
                 registers[get.getRegisterIndex(arg1)]--;
                 return 1; 
             case "BEQ":
-                return 1; 
+            if (getValue(arg1) == getValue(arg2)) {
+                pc = Integer.parseInt(labelTable.get(label));
+                }
+                return 0; 
             case "BNE":
-                return 1; 
+                if (getValue(arg1) != getValue(arg2)) {
+                currentInstructionIndex = labels.get(label);
+                }
+                return 0;
             case "BBG":
+                if (arg1Val > arg2Val) {
+                 return getLabelIndex(label);
+                }
                 return 1; 
             case "BSM":
-                return 1; 
+                String[] labelTokens = instructionParts[instructionParts.length-1].split(":");
+                String label = labelTokens[labelTokens.length-1];
+
+                if ( getValue(arg1) < getValue(arg2)) {
+                    return labelMap.get(label);
+                 } else {
+                return currentAddress + 1;
+        
             case "JMP":
+                return getLabelIndex(arg1);
+            case "SRL":
+                registers[get.getRegisterIndex(arg1)]= registers[get.getRegisterIndex(arg1)] << arg2;     
+                return 1;
+            case "SLL":
+                registers[get.getRegisterIndex(arg1)]= registers[get.getRegisterIndex(arg1)] >> arg2;
                 return 1;
             default:
                 System.out.println("Invalid instruction: " + instruction);
