@@ -110,6 +110,61 @@ public class get {
                 throw new Exception("Invalid opcode: " + opcode);
         }
     }
+    public static String getGoodData(String opcode,String arg1, String arg2, String arg3, Simulator simulation) throws Exception {
+        switch (opcode.toUpperCase()) {
+            case "LDA":
+            if(!Verification.isReg(arg1)){
+                return "1st arg wrong type or non-existent";
+            }else if (!Verification.isReg(arg2) & !Verification.isVar(arg2,simulation) & !Verification.isConst(arg2)){
+                return "2nd arg wrong type or non-existent";
+            }
+                return null;
+            case "STR":
+                return null;
+            case "PUSH":
+                return null;
+            case "POP":
+                return null;
+            case "AND":
+                return null;
+            case "OR":
+                return null;
+            case "NOT":
+                return null;
+            case "ADD":
+                return null;
+            case "SUB":
+                return null;
+            case "DIV":
+                return null;
+            case "MUL":
+                return null;
+            case "MOD":
+                return null;
+            case "INC":
+                return null;
+            case "DEC":
+                return null;
+            case "BEQ":
+                return null;
+            case "BNE":
+                return null;
+            case "BBG":
+                return null;
+            case "BSM":
+                return null;
+            case "JMP":
+                return null;
+            case "HLT":
+                return null;
+            case "SRL":
+                return null;
+            case "SRR":
+                return null;
+            default:
+                throw new Exception("Invalid opcode: " + opcode);
+        }
+    }
 }
 
     

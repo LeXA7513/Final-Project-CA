@@ -3,14 +3,14 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.Font;
 
 
 
 class Interface_test {
     private static Simulator simulate = null;
     private static JButton button2, button3, button4;
-    private static JLabel file_name;
+    private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status;
     
     public static void main(String[] args) {
         
@@ -27,6 +27,9 @@ class Interface_test {
 
         JLabel label12 = new JLabel("File Status");
         label12.setBounds(50, 75, 100, 30);
+
+        status = new JLabel("");
+        status.setBounds(50, 95, 250, 30);
 
         JLabel label13 = new JLabel("Code");
         label13.setBounds(50, 115, 100, 30);
@@ -55,6 +58,21 @@ class Interface_test {
 
         JLabel label120 = new JLabel("PC");  
         label120.setBounds(50, 390, 100, 30);
+
+        count_t0 = new JLabel("0");
+        count_t0.setBounds(200, 310, 100, 30);
+
+        count_t1 = new JLabel("0");
+        count_t1.setBounds(200, 330, 100, 30);
+
+        count_t2 = new JLabel("0");
+        count_t2.setBounds(200, 350, 100, 30);
+
+        count_t3 = new JLabel("0");
+        count_t3.setBounds(200, 370, 100, 30);
+
+        count_pc = new JLabel("0");  
+        count_pc.setBounds(200, 390, 100, 30);
 
         JLabel label20 = new JLabel("Memory Info");
         label20.setBounds(400, 0, 100, 30);
@@ -85,10 +103,9 @@ class Interface_test {
                     File selectedFile = fileChooser.getSelectedFile();
                     String filePath = selectedFile.getAbsolutePath();
                     simulate = new Simulator(filePath);
-                    textField1.append(get.getCode(simulate));
-                    textField1.requestFocus();
-                    textField22.append(get.getData(simulate));
-                    textField22.requestFocus();
+                    textField1.setText(get.getCode(simulate));
+                    textField22.setText(get.getData(simulate));
+                    status.setText("File Load");
                     button2.setEnabled(true);
                     button3.setEnabled(true);
                     button4.setEnabled(true);
@@ -107,11 +124,16 @@ class Interface_test {
                 button4.setEnabled(false);
                 if (simulate != null) { 
                     try {
-                        simulate.checkProgram(get.getCode(simulate));
+                        String error = simulate.checkProgram(get.getCode(simulate));
+                        if(error==null){
+                        status.setText("Checked program");
                         button3.setEnabled(true);
-                        button4.setEnabled(true);
+                        button4.setEnabled(true);}
+                        else {
+                            status.setText(error);
+                        }
                     } catch (Exception ex) {
-                        System.out.println("Error check program: " + ex.getMessage());
+                        status.setText(ex.getMessage());
                     }
                     
                 }              
@@ -126,6 +148,17 @@ class Interface_test {
         button4 = new JButton("Step Simulation");
         button4.setEnabled(false);
         button4.setBounds(400, 400, 150, 30);
+
+        Font newLabelFont=new Font(label.getFont().getName(),Font.ITALIC,label.getFont().getSize());
+
+        file_name.setFont(newLabelFont);
+        count_pc.setFont(newLabelFont);
+        count_t0.setFont(newLabelFont);
+        count_t1.setFont(newLabelFont);
+        count_t2.setFont(newLabelFont);
+        count_t3.setFont(newLabelFont);
+        status.setFont(newLabelFont);
+
 
         f.add(label);
         f.add(label21);
@@ -151,6 +184,13 @@ class Interface_test {
         f.add(button2);
         f.add(button3);
         f.add(button4);
+        f.add(count_t0);
+        f.add(count_t1);
+        f.add(count_t2);
+        f.add(count_t3);
+        f.add(count_pc);
+        f.add(status);
+
 
         f.setSize(700,500);
         f.setLayout(null);

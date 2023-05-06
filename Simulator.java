@@ -1,3 +1,4 @@
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -11,8 +12,9 @@ public class Simulator {
     private int[] memory; 
     public String[] memorybinary;
     private int[] registers;
+    public List<String> variableNameVerification;
     private int pc;
-    private int numberlineCode, numberVar, LimitCode;
+    private int numberlineCode, numberVar = 0 , LimitCode;
 
     private Map<String, Integer> variableMap;
 
@@ -20,7 +22,7 @@ public class Simulator {
         memory = new int[MEMORY_SIZE];
         memorybinary = new String[MEMORY_SIZE];
         registers = new int[REGISTER_COUNT];
-        variableMap = new HashMap<>();
+        variableNameVerification = new ArrayList<String>();
 
         loadProgram(filePath);
     }
@@ -52,7 +54,7 @@ public class Simulator {
                 }
 
                 if (isDataSection) {
-                            numberVar ++;
+                            
                             int a = 0;
                             String[] tokens = line.split(" ");
                             String variableName[] = binaryConversion.toBinaryText(tokens[0]).split(" ");
@@ -68,6 +70,8 @@ public class Simulator {
                                 a --;
                             }
                             e += initialValue.length + 1;
+                            variableNameVerification.add(tokens[0]);
+                            numberVar ++;
                 } else if(isCodeSection) {
                         numberlineCode ++ ;
                         String text_to_add = binaryConversion.toBinaryText(line) + " 00001101 00001010 ";
@@ -83,37 +87,46 @@ public class Simulator {
             LimitCode = n ;
 
             reader.close(); 
-
     } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void checkProgram(String code) throws Exception {
+    public String checkProgram(String code) throws Exception {
         String[] lines = binaryConversion.toBinaryText(code).split("00001101 00001010");
         lines[0] = binaryConversion.fromBinaryText(lines[0]);
+        int compteur_ligne = 1;
         for (int i=1;i<lines.length;i++){
             StringBuilder MyString = new StringBuilder(lines[i]);
             lines[i] = binaryConversion.fromBinaryText(MyString.deleteCharAt(0).toString());
         }
+
         for (String line : lines) {
             String[] tokens = line.split(" ");
             String opcode = tokens[0].toUpperCase();
             if (tokens.length != get.getInstructionSize(opcode)) {
-                throw new Exception("Invalid size instruction: " + line);
+                return "Invalid size instruction: " + line;
             }
-            String arg1 ="", arg2="", arg3="";
+            String arg1 = null, arg2= null, arg3= null, reponse = null;
             if(get.getInstructionSize(opcode)==2){
                 arg1 = tokens[1].toUpperCase();
+                reponse = get.getGoodData(opcode, arg1, arg2, arg3,this);
             }else if(get.getInstructionSize(opcode)==3){
                 arg1 = tokens[1].toUpperCase();
                 arg2 = tokens[2].toUpperCase();
+                reponse = get.getGoodData(opcode, arg1, arg2, arg3,this);
             } else if (get.getInstructionSize(opcode)==4){
                 arg1 = tokens[1].toUpperCase();
                 arg2 = tokens[2].toUpperCase();
                 arg3 = tokens[3].toUpperCase();
+                reponse = get.getGoodData(opcode, arg1, arg2, arg3,this);
             }
-        }
+            if (reponse != null){
+                return "Line "+compteur_ligne + " : "+reponse ;
+            }
+            compteur_ligne ++;
 
+        }
+        return null;
         
     }
     private int assemble(String instruction) throws Exception {
