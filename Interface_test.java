@@ -34,9 +34,9 @@ class Interface_test {
         JLabel label13 = new JLabel("Code");
         label13.setBounds(50, 115, 100, 30);
 
-        JTextArea textField1 = new JTextArea();
-        textField1.setEditable(false);
-        textField1.setBounds(50, 140, 150, 80);
+        JTextArea code_text = new JTextArea();
+        code_text.setEditable(false);
+        code_text.setBounds(50, 140, 150, 80);
 
         JLabel label14 = new JLabel("Registers");
         label14.setBounds(50, 230, 100, 30);
@@ -80,16 +80,16 @@ class Interface_test {
         JLabel label21 = new JLabel("Variables");
         label21.setBounds(400, 55, 100, 30);
 
-        JTextArea textField22 = new JTextArea();
-        textField22.setEditable(false);
-        textField22.setBounds(400, 80, 150, 80);
+        JTextArea data_text = new JTextArea();
+        data_text.setEditable(false);
+        data_text.setBounds(400, 80, 150, 80);
 
         JLabel label23 = new JLabel("Stack");
         label23.setBounds(400, 160, 100, 30);
 
-        JTextArea textField23 = new JTextArea();
-        textField23.setEditable(false);
-        textField23.setBounds(400, 185, 150, 80);
+        JTextArea stack_text = new JTextArea();
+        stack_text.setEditable(false);
+        stack_text.setBounds(400, 185, 150, 80);
         
         JButton button = new JButton("Load File");
         button.setBounds(400, 280, 150, 30);
@@ -103,8 +103,8 @@ class Interface_test {
                     File selectedFile = fileChooser.getSelectedFile();
                     String filePath = selectedFile.getAbsolutePath();
                     simulate = new Simulator(filePath);
-                    textField1.setText(get.getCode(simulate));
-                    textField22.setText(get.getData(simulate));
+                    code_text.setText(get.getCode(simulate));
+                    data_text.setText(get.getDataText(simulate));
                     status.setText("File Load");
                     button2.setEnabled(true);
                     button3.setEnabled(true);
@@ -144,6 +144,36 @@ class Interface_test {
         button3 = new JButton("Simulate");
         button3.setEnabled(false);
         button3.setBounds(400, 360, 150, 30);
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button2.setEnabled(false);
+                button4.setEnabled(false);
+                if (simulate != null) { 
+                    try {
+                        String error = simulate.simulateProgram(get.getCode(simulate));
+                        if(error==null){
+                        status.setText("Program Simulate");
+                        button2.setEnabled(true);
+                        button4.setEnabled(true);
+                        count_t0.setText(String.valueOf(simulate.registers[0]));
+                        count_t1.setText(String.valueOf(simulate.registers[1]));
+                        count_t2.setText(String.valueOf(simulate.registers[2]));
+                        count_t3.setText(String.valueOf(simulate.registers[3]));
+                        data_text.setText(get.getDataText(simulate));
+                        count_pc.setText(String.valueOf(simulate.pc));
+                        stack_text.setText("Work");
+                        }
+                        else {
+                            status.setText(error);
+                        }
+                    } catch (Exception ex) {
+                        status.setText(ex.getMessage());
+                    }
+                    
+                }              
+            }
+        });
 
         button4 = new JButton("Step Simulation");
         button4.setEnabled(false);
@@ -172,9 +202,9 @@ class Interface_test {
         f.add(label18);
         f.add(label19);
         f.add(label120);
-        f.add(textField1);
-        f.add(textField22);
-        f.add(textField23);
+        f.add(code_text);
+        f.add(data_text);
+        f.add(stack_text);
         f.add(label20);
         f.add(label21);
         f.add(label23);

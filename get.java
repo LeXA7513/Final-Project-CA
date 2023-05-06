@@ -12,7 +12,8 @@ public class get {
             }  
         return text;
     }
-    public static String getData(Simulator simulate) {
+    
+    public static String getDataText(Simulator simulate) {
         String text = "";
         Boolean notend = true;
         int compteur = 0, repere;
@@ -45,6 +46,41 @@ public class get {
             }
         return text;
     }
+    
+    public static String getDataTextCalculus(Simulator simulate) {
+        String text = "";
+        Boolean notend = true;
+        int compteur = 0, repere;
+
+        for(int i=simulate.MEMORY_SIZE-1;i>0;i--){
+            repere = i;
+            if(simulate.memorybinary[i] != null){
+                if(compteur == 0){
+                    text =text + binaryConversion.fromBinaryText(simulate.memorybinary[i]);
+                } else if(compteur==1) {
+                    compteur = 0;
+                    String nombre = "";
+                    for (int a=repere;a>repere-4;a--){
+                        nombre = simulate.memorybinary[a] + nombre;
+                    }
+                    i = i-4;
+                    text =text +" "+ binaryConversion.fromBinaryNumber(nombre)+binaryConversion.fromBinaryText("00100000");
+                }    
+            }
+            else if(notend){
+                compteur ++;
+                text = text + " ";
+                if (compteur==2){
+                    notend = false;
+                }
+            }
+            else{
+                break;
+            }
+            }
+        return text;
+    }
+
     public static int getRegisterIndex(String registerName) throws Exception {
         switch (registerName.toUpperCase()) {
             case "T0":
@@ -110,6 +146,7 @@ public class get {
                 throw new Exception("Invalid opcode: " + opcode);
         }
     }
+   
     public static String getGoodData(String opcode,String arg1, String arg2, String arg3, Simulator simulation) throws Exception {
         switch (opcode.toUpperCase()) {
             case "LDA":
@@ -164,6 +201,23 @@ public class get {
             default:
                 throw new Exception("Invalid opcode: " + opcode);
         }
+    }
+
+    public static int getValue(String arg){
+        return Integer.parseInt(arg);
+    }
+
+    public static int getValueVar(String arg,Simulator simulate){
+        String data = get.getDataTextCalculus(simulate);
+        String[] tokens = data.split(" ");
+        for(int token = 0; token<tokens.length; token++){
+            String donnee = tokens[token];
+            if ( donnee.equals(arg)){
+                int value = get.getValue(tokens[token+2]);
+                return value;
+            }
+        }
+        return 0;
     }
 }
 
