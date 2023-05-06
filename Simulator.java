@@ -174,48 +174,45 @@ public class Simulator {
                 registers[get.getRegisterIndex(arg1)] = poppedValue;
                 return 1;
             case "AND":
-                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] & getValue(arg2);
+                registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] & getValue(arg2);
                 return 1;  
             case "OR":
                 int orOperandValue = getValue(arg2);
-                registers[getRegisterIndex(arg1)] = registers[getRegisterIndex(arg1)] | orOperandValue;
+                registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] | orOperandValue;
                 return 1;
             case "NOT":
-                int argVal = registers[getRegisterIndex(arg1)];
-                registers[getRegisterIndex(arg1)] =  ~argVal; 
+                int argVal = registers[get.getRegisterIndex(arg1)];
+                registers[get.getRegisterIndex(arg1)] =  ~argVal; 
                 return 1;
             case "SUB":
-                int arg1Val = registers[getRegisterIndex(arg1)];
+                int arg1Val = registers[get.getRegisterIndex(arg1)];
                 int arg2Val = getValue(arg2);
                 int result = arg2Val - arg1Val;
-                registers[getRegisterIndex(arg1)] = result;
+                registers[get.getRegisterIndex(arg1)] = result;
                 return 1;
             case "DIV":
-                int dividend = registers[getRegisterIndex(arg2)];
+                int dividend = registers[get.getRegisterIndex(arg2)];
                 int divisor = getValue(arg1);
                 if (divisor == 0) {
                 System.out.println("Error: Division by zero");
                 return -1;
                 }
-                registers[getRegisterIndex(arg1)] = dividend / divisor;
+                registers[get.getRegisterIndex(arg1)] = dividend / divisor;
                 return 1;
             case "MUL":
-                int arg1Val = registers[getRegisterIndex(arg1)];
-                int arg2Val = getValue(arg2);
-                int result = arg1Val * arg2Val;
-                registers[getRegisterIndex(arg1)] = result;
+                registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] * getValue(arg2);;
                 return 1;
             case "MOD":
-                int arg1ValMod = registers[getRegisterIndex(arg1)];
+                int arg1ValMod = registers[get.getRegisterIndex(arg1)];
                 int arg2ValMod = getValue(arg2);
                 int resultMod = arg2ValMod % arg1ValMod;
-            r   egisters[getRegisterIndex(arg1)] = resultMod;
+                registers[get.getRegisterIndex(arg1)] = resultMod;
                 return 1; 
             case "INC":
-                registers[getRegisterIndex(arg1)]++;
+                registers[get.getRegisterIndex(arg1)]++;
                 return 1; 
             case "DEC":
-            registers[getRegisterIndex(arg1)]--;
+                registers[get.getRegisterIndex(arg1)]--;
                 return 1; 
             case "BEQ":
                 return 1; 
