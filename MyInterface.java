@@ -29,7 +29,7 @@ public class MyInterface extends JFrame {
         constraints.gridy = 0;
         fileInfoPanel.add(labelName, constraints);
 
-        JLabel file_name = new JLabel("");
+        JLabel file_name = new JLabel(" ");
         GridBagConstraints constraints01 = new GridBagConstraints();
         constraints01.anchor = GridBagConstraints.WEST;
         constraints01.insets = new Insets(0, 0, 10, 20);
@@ -64,7 +64,7 @@ public class MyInterface extends JFrame {
         fileInfoPanel.add(labelcode, constraints1);
     
         // create a text area with scroll pane
-        JTextArea code_text = new JTextArea(10, 30);
+        JTextArea code_text = new JTextArea(10, 35);
         JScrollPane scrollPane = new JScrollPane(code_text);
         GridBagConstraints constraints2 = new GridBagConstraints();
         constraints2.anchor = GridBagConstraints.WEST;
@@ -112,7 +112,7 @@ public class MyInterface extends JFrame {
         JLabel count_t0 = new JLabel("0");
         GridBagConstraints constraints03 = new GridBagConstraints();
         constraints03.anchor = GridBagConstraints.WEST;
-        constraints03.insets = new Insets(10, 0, 10, 0);
+        constraints03.insets = new Insets(10, 0, 10, 20);
         constraints03.gridx = 1;
         constraints03.gridy = 3;
         registerPanel.add(count_t0, constraints03);
@@ -129,7 +129,7 @@ public class MyInterface extends JFrame {
         JLabel count_t1 = new JLabel("0");
         GridBagConstraints constraints04 = new GridBagConstraints();
         constraints04.anchor = GridBagConstraints.WEST;
-        constraints04.insets = new Insets(10, 0, 10, 0);
+        constraints04.insets = new Insets(10, 0, 10, 20);
         constraints04.gridx = 1;
         constraints04.gridy = 4;
         registerPanel.add(count_t1, constraints04);
@@ -146,7 +146,7 @@ public class MyInterface extends JFrame {
         JLabel count_t2 = new JLabel("0");
         GridBagConstraints constraints05 = new GridBagConstraints();
         constraints05.anchor = GridBagConstraints.WEST;
-        constraints05.insets = new Insets(10, 0, 10, 0);
+        constraints05.insets = new Insets(10, 0, 10, 20);
         constraints05.gridx = 1;
         constraints05.gridy = 5;
         registerPanel.add(count_t2, constraints05);
@@ -163,7 +163,7 @@ public class MyInterface extends JFrame {
         JLabel count_t3 = new JLabel("0");
         GridBagConstraints constraints06 = new GridBagConstraints();
         constraints06.anchor = GridBagConstraints.WEST;
-        constraints06.insets = new Insets(10, 0, 10, 0);
+        constraints06.insets = new Insets(10, 0, 10, 20);
         constraints06.gridx = 1;
         constraints06.gridy = 6;
         registerPanel.add(count_t3, constraints06);
@@ -172,7 +172,7 @@ public class MyInterface extends JFrame {
         JLabel labelPC = new JLabel("PC");
         GridBagConstraints constraints8 = new GridBagConstraints();
         constraints8.anchor = GridBagConstraints.WEST;
-        constraints8.insets = new Insets(10, 0, 10, 30);
+        constraints8.insets = new Insets(10, 0, 10, 0);
         constraints8.gridx = 0;
         constraints8.gridy = 7;
         registerPanel.add(labelPC, constraints8);
@@ -180,7 +180,7 @@ public class MyInterface extends JFrame {
         JLabel count_pc = new JLabel("0");
         GridBagConstraints constraints07 = new GridBagConstraints();
         constraints07.anchor = GridBagConstraints.WEST;
-        constraints07.insets = new Insets(10, 0, 10, 30);
+        constraints07.insets = new Insets(10, 0, 10, 20);
         constraints07.gridx = 1;
         constraints07.gridy = 7;
         registerPanel.add(count_pc, constraints07);
@@ -240,12 +240,14 @@ public class MyInterface extends JFrame {
         constraints12.gridwidth = 2;
         memoryPanel.add(scrollPane3, constraints12);
 
+
+
         // set border for the panel
         memoryPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Memory info"));
-
         // add the panel to the content pane
         contentPane.add(memoryPanel);
+
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
 
@@ -422,7 +424,25 @@ public class MyInterface extends JFrame {
         count_t1.setFont(newLabelFont);
         count_t2.setFont(newLabelFont);
         count_t3.setFont(newLabelFont);
+        labelnext.setFont(newLabelFont);
         status.setFont(newLabelFont);
+
+        Font newLabelFont1 = new Font(BigPanel.getFont().getName(), Font.PLAIN, BigPanel.getFont().getSize());
+
+        labelName.setFont(newLabelFont1);
+        labelPC.setFont(newLabelFont1);
+        labelT0.setFont(newLabelFont1);
+        labelT1.setFont(newLabelFont1);
+        labelT2.setFont(newLabelFont1);
+        labelT3.setFont(newLabelFont1);
+        labelStatus.setFont(newLabelFont1);
+        labelNext.setFont(newLabelFont1);
+        labelVariables.setFont(newLabelFont1);
+        labelStack.setFont(newLabelFont1);
+        labelcode.setFont(newLabelFont1);
+
+
+
         
         pack();
         setLocationRelativeTo(null);
