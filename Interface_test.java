@@ -1,9 +1,12 @@
-import javax.swing.*;
-import java.io.File;
-import javax.swing.JFileChooser;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Font;
+import java.io.File;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
 
 class Interface_test {
     private static Simulator simulate = null;
