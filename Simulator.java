@@ -164,15 +164,12 @@ public class Simulator {
     }
 
     private int execute(String opcode, String arg1, String arg2, String arg3) throws Exception {
-
         switch (opcode) {
             // return 0 if end program, 1 if register value change, 2 if var value change
             case "LDA":
                 if (Verification.isConst(arg2)) {
                     registers[get.getRegisterIndex(arg1)] = get.getValue(arg2);
                 } else if (Verification.isVar(arg2, this)) {
-                    for (int i=0; i<registers.length;i++){
-                    System.out.println(registers[i]);}
                     registers[get.getRegisterIndex(arg1)] = get.getValueVar(arg2, this);
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg2)];
@@ -297,20 +294,36 @@ public class Simulator {
     }
 
     private void changeData(String var, int value) {
-
+        
         String data = get.getDataTextCalculus(this);
         String[] tokens = data.split(" ");
+        String[] variableName = new String[(tokens.length/2)] ;
+        String[] initialValue = new String[(tokens.length/2)] ;
+        int a = 0, e = 0, num_var=0;
         for (int token = 0; token < tokens.length; token++) {
             String donnee = tokens[token];
             if (donnee.equals(var)) {
                 tokens[token + 1] = String.valueOf(value);
             }
+            if( token % 2 == 0){
+                variableName[token/2] = tokens[token];
+            }else {
+                initialValue[token/2] = tokens[token];
+            }
         }
-         /* 
-        int a = 0, e = 0;
-        String variableName[] = binaryConversion.toBinaryText(tokens[0]).split(" ");
+        for(int i=0;i<variableName.length;i++){
+            System.out.println(variableName[i]);
+            System.out.println(binaryConversion.toBinaryText(variableName[i])+".");
+            System.out.println(initialValue[i]);
+            System.out.println(binaryConversion.toBinaryNumber(Integer.parseInt(initialValue[i]))+".");
+        }
+        
+         /*
+        System.out.println(binaryConversion.toBinaryText(variableName[3]));
         String initialValue[] = binaryConversion.toBinaryNumber(Integer.parseInt(tokens[1])).split(" ");
+        
         for (int i = MEMORY_SIZE - 1; i > MEMORY_SIZE - variableName.length - 1; i--) {
+
             memorybinary[i - e] = variableName[a];
             a++;
         }

@@ -64,7 +64,7 @@ public class get {
                         nombre = simulate.memorybinary[a] + nombre;
                     }
                     i = i-4;
-                    text =text +" "+ binaryConversion.fromBinaryNumber(nombre)+binaryConversion.fromBinaryText("00100000");
+                    text =text + binaryConversion.fromBinaryNumber(nombre)+" ";
                 }    
             }
             else if(notend){
@@ -213,7 +213,7 @@ public class get {
         for(int token = 0; token<tokens.length; token++){
             String donnee = tokens[token];
             if ( donnee.equals(arg)){
-                int value = get.getValue(tokens[token+2]);
+                int value = get.getValue(tokens[token+1]);
                 return value;
             }
         }

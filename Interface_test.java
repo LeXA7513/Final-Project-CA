@@ -166,9 +166,11 @@ class Interface_test {
                         }
                         else {
                             status.setText(error);
+                            System.out.println(error);
                         }
                     } catch (Exception ex) {
                         status.setText(ex.getMessage());
+                        System.out.println(ex.getMessage());
                     }
                     
                 }              
