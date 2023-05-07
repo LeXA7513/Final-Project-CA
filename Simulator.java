@@ -212,9 +212,9 @@ public class Simulator {
                 return "Simulated Program";
             } else if (interrogation == 3) {
                 if (arg3 != null) {
-                    numline = get.getLineLabel(arg3, this) - 2;
+                    pc  = get.getLineLabel(arg3, this)+1;
                 } else {
-                    numline = get.getLineLabel(arg1, this) - 2;
+                    pc = get.getLineLabel(arg1, this)+1;
                 }
             }
         
@@ -417,6 +417,9 @@ public class Simulator {
                 registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] >> get.getValue(arg2);
                 return 1;
             default:
+                if (Verification.isLabel(opcode, this)){
+                    return 4;
+                }
                 System.out.println("Invalid instruction: " + opcode + " " + arg1 + " " + arg2 + " " + arg3);
                 return -1;
         }

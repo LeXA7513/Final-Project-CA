@@ -32,14 +32,11 @@ public class Verification {
     }
 
     public static boolean isLabelArg(String arg, Simulator simulation) {
-        System.out.println(arg);
         for (String c : simulation.label.keySet()) {
             if (c.equals(arg)) {
-                System.out.println("IS LaBeL");
                 return true;
             }
         }
-        System.out.println("NOT LaBeL");
         return false;
     }
 
