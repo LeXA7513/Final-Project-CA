@@ -334,4 +334,15 @@ public class get {
             return get.getValueVar(arg, simulation);
         }
     };
+
+    public static String getStackText(Simulator simulate){
+        String text ="";
+        if(simulate.stack.size() != 0){
+            for(int i = 0; i<simulate.stack.size();i++){
+                text = text + String.valueOf(i+1) +" : " + String.valueOf(simulate.stack.get(i)) + binaryConversion.fromBinaryText("00001101 00001010");
+            }
+            return text;
+        }
+        return text;
+    }
 }

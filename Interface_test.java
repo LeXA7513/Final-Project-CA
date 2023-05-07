@@ -162,7 +162,7 @@ class Interface_test {
                         count_t3.setText(String.valueOf(simulate.registers[3]));
                         data_text.setText(get.getDataText(simulate));
                         count_pc.setText(String.valueOf(simulate.pc));
-                        stack_text.setText("Work");
+                        stack_text.setText(get.getStackText(simulate));
                         }
                         else {
                             status.setText(error);
@@ -180,6 +180,37 @@ class Interface_test {
         button4 = new JButton("Step Simulation");
         button4.setEnabled(false);
         button4.setBounds(400, 400, 150, 30);
+        button4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button2.setEnabled(false);
+                if (simulate != null) { 
+                    try {
+                        String error = simulate.simulateProgram(get.getCode(simulate));
+                        if(error==null){
+                        status.setText("Program Simulate");
+                        button2.setEnabled(true);
+                        button4.setEnabled(true);
+                        count_t0.setText(String.valueOf(simulate.registers[0]));
+                        count_t1.setText(String.valueOf(simulate.registers[1]));
+                        count_t2.setText(String.valueOf(simulate.registers[2]));
+                        count_t3.setText(String.valueOf(simulate.registers[3]));
+                        data_text.setText(get.getDataText(simulate));
+                        count_pc.setText(String.valueOf(simulate.pc));
+                        stack_text.setText(get.getStackText(simulate));
+                        }
+                        else {
+                            status.setText(error);
+                            System.out.println(error);
+                        }
+                    } catch (Exception ex) {
+                        status.setText(ex.getMessage());
+                        System.out.println(ex.getMessage());
+                    }
+                    
+                }              
+            }
+        });
 
         Font newLabelFont=new Font(label.getFont().getName(),Font.ITALIC,label.getFont().getSize());
 

@@ -8,6 +8,7 @@ public class Simulator {
 
     public String[] memorybinary;
     public int[] registers;
+    public List<Integer> stack;
     public List<String> variableNameVerification;
     public int pc;
     private int numberlineCode, numberVar = 0, LimitCode;
@@ -16,6 +17,7 @@ public class Simulator {
         memorybinary = new String[MEMORY_SIZE];
         registers = new int[REGISTER_COUNT];
         variableNameVerification = new ArrayList<String>();
+        stack = new ArrayList<Integer>();
 
         loadProgram(filePath);
     }
@@ -123,13 +125,13 @@ public class Simulator {
     public String simulateProgram(String code) throws Exception {
         String[] lines = binaryConversion.toBinaryText(code).split("00001101 00001010");
         lines[0] = binaryConversion.fromBinaryText(lines[0]);
-        int compteur_ligne = 1;
+
         for (int i = 1; i < lines.length; i++) {
             StringBuilder MyString = new StringBuilder(lines[i]);
             lines[i] = binaryConversion.fromBinaryText(MyString.deleteCharAt(0).toString());
         }
         int numline;
-        for ( numline= 0; numline < lines.length; numline++) {
+        for (numline = 0; numline < lines.length; numline++) {
             String line = lines[numline];
             String[] tokens = line.split(" ");
             String opcode = tokens[0].toUpperCase();
@@ -150,19 +152,18 @@ public class Simulator {
                 arg3 = tokens[3].toUpperCase();
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
             }
-            if (reponse != null) {
-                return "Line " + compteur_ligne + " : " + reponse;
-            }
             pc = numline + 1;
-            compteur_ligne++;
+            if (reponse != null) {
+                return "Line " + pc + " : " + reponse;
+            }
             int interrogation = execute(opcode, arg1, arg2, arg3);
             if (interrogation == 0) {
                 break;
-            } else if (interrogation == 3){
-                if(arg3 != null){
-                    numline = get.getLaValeur(arg3, this);
+            } else if (interrogation == 3) {
+                if (arg3 != null) {
+                    numline = get.getLaValeur(arg3, this) - 2;
                 } else {
-                    numline = get.getLaValeur(arg1, this);
+                    numline = get.getLaValeur(arg1, this) - 2;
                 }
             }
         }
@@ -174,7 +175,8 @@ public class Simulator {
         int valeur_arg1, valeur_arg2;
         switch (opcode) {
             // return 0 if end program, 1 if register value change, 2 if var value change,
-            // -1 error, 3 if jump , 4 if not jump
+            // -1 error, 3 if jump , 4 if not jump, 5 if stack change , 6 if stack and reg
+            // value change
             case "LDA":
                 if (Verification.isConst(arg2)) {
                     registers[get.getRegisterIndex(arg1)] = get.getValue(arg2);
@@ -205,21 +207,21 @@ public class Simulator {
                 }
                 return 2;
 
-            /*
-             * case "PUSH":
-             * int operandValue = getValue(arg1);
-             * stackTop = registers[3];
-             * memory[stackTop] = operandValue;
-             * registers[3] -= 1;
-             * return 1;
-             */
-            /*
-             * case "POP":
-             * stackTop = registers[3] + 1;
-             * int poppedValue = memory[stackTop];
-             * registers[get.getRegisterIndex(arg1)] = poppedValue;
-             * return 1;
-             */
+            case "PUSH":
+                if (Verification.isConst(arg1)) {
+                    this.stack.add(get.getValue(arg1));
+                } else if (Verification.isReg(arg1)) {
+                    this.stack.add(registers[get.getRegisterIndex(arg1)]);
+                } else {
+                    this.stack.add(get.getValueVar(arg1, this));
+                }
+                return 5;
+
+            case "POP":
+                registers[get.getRegisterIndex(arg1)] = Integer.valueOf(this.stack.get(this.stack.size() - 1));
+                this.stack.remove(this.stack.size() - 1);
+                return 6;
+
             case "AND":
                 if (Verification.isConst(arg2)) {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] & get.getValue(arg2);
