@@ -1,3 +1,6 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class get {
     public static String getCode(Simulator simulate) {
         String text = "";
@@ -149,20 +152,20 @@ public class get {
             case "LDA":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
                 return null;
             case "STR":
-                if (!Verification.isVar(arg1, simulation)) {
+                if (!Verification.isVar(arg1, simulation)  & !Verification.isVarIndirect(arg1, simulation)) {
                     return "1st arg wrong type or non-existent";
                 } else if (!Verification.isReg(arg2) & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
                 return null;
             case "PUSH":
-                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1)) {
+                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1) & !Verification.isVarIndirect(arg1, simulation)) {
                     return "1st arg wrong type or non-existent";
                 }
                 return null;
@@ -174,7 +177,7 @@ public class get {
             case "AND":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -182,7 +185,7 @@ public class get {
             case "OR":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -195,7 +198,7 @@ public class get {
             case "ADD":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -203,7 +206,7 @@ public class get {
             case "SUB":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -211,7 +214,7 @@ public class get {
             case "DIV":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -219,7 +222,7 @@ public class get {
             case "MUL":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -227,7 +230,7 @@ public class get {
             case "MOD":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 }
@@ -243,9 +246,9 @@ public class get {
                 }
                 return null;
             case "BEQ":
-                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1)) {
+                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1) & !Verification.isVarIndirect(arg1, simulation)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 } else if (!Verification.isConst(arg3)) {
@@ -253,9 +256,9 @@ public class get {
                 }
                 return null;
             case "BNE":
-                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1)) {
+                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1) & !Verification.isVarIndirect(arg1, simulation)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 } else if (!Verification.isConst(arg3)) {
@@ -263,9 +266,9 @@ public class get {
                 }
                 return null;
             case "BBG":
-                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1)) {
+                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1) & !Verification.isVarIndirect(arg1, simulation)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 } else if (!Verification.isConst(arg3)) {
@@ -273,9 +276,9 @@ public class get {
                 }
                 return null;
             case "BSM":
-                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1)) {
+                if (!Verification.isReg(arg1) & !Verification.isVar(arg1, simulation) & !Verification.isConst(arg1) & !Verification.isVarIndirect(arg1, simulation)) {
                     return "1st arg wrong type or non-existent";
-                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation)
+                } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
                 } else if (!Verification.isConst(arg3)) {
@@ -324,14 +327,33 @@ public class get {
         }
         return 0;
     }
+    
+    public static int getValueVarIndirect(String arg, Simulator simulate) {
+        String data = get.getDataTextCalculus(simulate);
+        String[] tokens = data.split(" ");
+        Pattern pattern = Pattern.compile("[-+]\\d+$");
+        Matcher matcher = pattern.matcher(arg);
+        String arg1 = arg.replaceAll("[-+]\\d+$", "");
+        for (int token = 0; token < tokens.length; token++) {
+            String donnee = tokens[token];
+            if (donnee.equals(arg1)) {
+                System.out.println(tokens[token + 1+(Integer.parseInt(matcher.group())*2)]);
+                int value = get.getValue(tokens[token + 1+(Integer.parseInt(matcher.group())*2)]);
+                return value;
+            }
+        }
+        return 0;
+    }
 
     public static int getLaValeur(String arg, Simulator simulation) throws Exception {
         if (Verification.isReg(arg)) {
             return simulation.registers[get.getRegisterIndex(arg)];
         } else if (Verification.isConst(arg)) {
             return get.getValue(arg);
-        } else {
+        } else if (Verification.isVar(arg, simulation)) {
             return get.getValueVar(arg, simulation);
+        } else {
+            return get.getValueVarIndirect(arg, simulation);
         }
     };
 

@@ -181,7 +181,6 @@ class Interface_test {
                 button2.setEnabled(false);
                 if (simulate != null) {
                     try {
-                        System.out.println(String.valueOf(simulate.pc));
                         String error = simulate.simulateProgram1line(get.getCode(simulate), simulate.pc);
                         if (error == null) {
                             status.setText("Step-by-Step Simulated Program");

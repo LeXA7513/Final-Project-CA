@@ -226,7 +226,10 @@ public class Simulator {
                     registers[get.getRegisterIndex(arg1)] = get.getValue(arg2);
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = get.getValueVar(arg2, this);
-                } else {
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] = get.getValueVarIndirect(arg2, this);
+                }
+                else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg2)];
                 }
                 return 1;
