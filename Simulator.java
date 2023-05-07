@@ -12,7 +12,6 @@ public class Simulator {
     public int pc;
     private int numberlineCode, numberVar = 0, LimitCode;
 
-
     public Simulator(String filePath) {
         memorybinary = new String[MEMORY_SIZE];
         registers = new int[REGISTER_COUNT];
@@ -129,8 +128,8 @@ public class Simulator {
             StringBuilder MyString = new StringBuilder(lines[i]);
             lines[i] = binaryConversion.fromBinaryText(MyString.deleteCharAt(0).toString());
         }
-
-        for (int numline = 0; numline < lines.length; numline++) {
+        int numline;
+        for ( numline= 0; numline < lines.length; numline++) {
             String line = lines[numline];
             String[] tokens = line.split(" ");
             String opcode = tokens[0].toUpperCase();
@@ -154,18 +153,28 @@ public class Simulator {
             if (reponse != null) {
                 return "Line " + compteur_ligne + " : " + reponse;
             }
-            pc = numline+1;
+            pc = numline + 1;
             compteur_ligne++;
-            if(execute(opcode, arg1, arg2, arg3) == 0){break;};
-            
+            int interrogation = execute(opcode, arg1, arg2, arg3);
+            if (interrogation == 0) {
+                break;
+            } else if (interrogation == 3){
+                if(arg3 != null){
+                    numline = get.getLaValeur(arg3, this);
+                } else {
+                    numline = get.getLaValeur(arg1, this);
+                }
+            }
         }
         return null;
 
     }
 
     private int execute(String opcode, String arg1, String arg2, String arg3) throws Exception {
+        int valeur_arg1, valeur_arg2;
         switch (opcode) {
-            // return 0 if end program, 1 if register value change, 2 if var value change
+            // return 0 if end program, 1 if register value change, 2 if var value change,
+            // -1 error, 3 if jump , 4 if not jump
             case "LDA":
                 if (Verification.isConst(arg2)) {
                     registers[get.getRegisterIndex(arg1)] = get.getValue(arg2);
@@ -192,9 +201,10 @@ public class Simulator {
                 if (Verification.isConst(arg2)) {
                     this.changeData(arg1, get.getValue(arg2));
                 } else {
-                    this.changeData(arg1,registers[get.getRegisterIndex(arg2)]);
+                    this.changeData(arg1, registers[get.getRegisterIndex(arg2)]);
                 }
                 return 2;
+
             /*
              * case "PUSH":
              * int operandValue = getValue(arg1);
@@ -202,91 +212,131 @@ public class Simulator {
              * memory[stackTop] = operandValue;
              * registers[3] -= 1;
              * return 1;
+             */
+            /*
              * case "POP":
              * stackTop = registers[3] + 1;
              * int poppedValue = memory[stackTop];
              * registers[get.getRegisterIndex(arg1)] = poppedValue;
              * return 1;
-             * case "AND":
-             * registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
-             * & getValue(arg2);
-             * return 1;
-             * case "OR":
-             * int orOperandValue = getValue(arg2);
-             * registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
-             * | orOperandValue;
-             * return 1;
-             * case "NOT":
-             * int argVal = registers[get.getRegisterIndex(arg1)];
-             * registers[get.getRegisterIndex(arg1)] = ~argVal;
-             * return 1;
-             * case "SUB":
-             * int arg1Val = registers[get.getRegisterIndex(arg1)];
-             * int arg2Val = getValue(arg2);
-             * int result = arg2Val - arg1Val;
-             * registers[get.getRegisterIndex(arg1)] = result;
-             * return 1;
-             * case "DIV":
-             * int dividend = registers[get.getRegisterIndex(arg2)];
-             * int divisor = getValue(arg1);
-             * if (divisor == 0) {
-             * System.out.println("Error: Division by zero");
-             * return -1;
-             * }
-             * registers[get.getRegisterIndex(arg1)] = dividend / divisor;
-             * return 1;
-             * case "MUL":
-             * registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
-             * * getValue(arg2);;
-             * return 1;
-             * case "MOD":
-             * int arg1ValMod = registers[get.getRegisterIndex(arg1)];
-             * int arg2ValMod = getValue(arg2);
-             * int resultMod = arg2ValMod % arg1ValMod;
-             * registers[get.getRegisterIndex(arg1)] = resultMod;
-             * return 1;
-             * case "INC":
-             * registers[get.getRegisterIndex(arg1)]++;
-             * return 1;
-             * case "DEC":
-             * registers[get.getRegisterIndex(arg1)]--;
-             * return 1;
-             * case "BEQ":
-             * if (getValue(arg1) == getValue(arg2)) {
-             * pc = Integer.parseInt(labelTable.get(label));
-             * }
-             * return 0;
-             * case "BNE":
-             * if (getValue(arg1) != getValue(arg2)) {
-             * currentInstructionIndex = labels.get(label);
-             * }
-             * return 0;
-             * case "BBG":
-             * if (arg1Val > arg2Val) {
-             * return getLabelIndex(label);
-             * }
-             * return 1;
-             * case "BSM":
-             * String[] labelTokens =
-             * instructionParts[instructionParts.length-1].split(":");
-             * String label = labelTokens[labelTokens.length-1];
-             * 
-             * if ( getValue(arg1) < getValue(arg2)) {
-             * return labelMap.get(label);
-             * } else {
-             * return currentAddress + 1;
-             * 
-             * case "JMP":
-             * return getLabelIndex(arg1);
-             * case "SRL":
-             * registers[get.getRegisterIndex(arg1)]= registers[get.getRegisterIndex(arg1)]
-             * << arg2;
-             * return 1;
-             * case "SLL":
-             * registers[get.getRegisterIndex(arg1)]= registers[get.getRegisterIndex(arg1)]
-             * >> arg2;
-             * return 1;
              */
+            case "AND":
+                if (Verification.isConst(arg2)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] & get.getValue(arg2);
+                } else if (Verification.isVar(arg2, this)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            & get.getValueVar(arg2, this);
+                } else {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            & registers[get.getRegisterIndex(arg2)];
+                }
+                return 1;
+            case "OR":
+                if (Verification.isConst(arg2)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] | get.getValue(arg2);
+                } else if (Verification.isVar(arg2, this)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            | get.getValueVar(arg2, this);
+                } else {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            | registers[get.getRegisterIndex(arg2)];
+                }
+                return 1;
+            case "NOT":
+                registers[get.getRegisterIndex(arg1)] = ~registers[get.getRegisterIndex(arg1)];
+                return 1;
+            case "SUB":
+                if (Verification.isConst(arg2)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] - get.getValue(arg2);
+                } else if (Verification.isVar(arg2, this)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            - get.getValueVar(arg2, this);
+                } else {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            - registers[get.getRegisterIndex(arg2)];
+                }
+                return 1;
+            case "DIV":
+                if (registers[get.getRegisterIndex(arg1)] == 0) {
+                    return -1;
+                }
+                if (Verification.isConst(arg2)) {
+                    registers[get.getRegisterIndex(arg1)] = get.getValue(arg2) / registers[get.getRegisterIndex(arg1)];
+                } else if (Verification.isVar(arg2, this)) {
+                    registers[get.getRegisterIndex(arg1)] = get.getValueVar(arg2, this)
+                            / registers[get.getRegisterIndex(arg1)];
+                } else {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg2)]
+                            / registers[get.getRegisterIndex(arg1)];
+                }
+                return 1;
+            case "MUL":
+                if (Verification.isConst(arg2)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] * get.getValue(arg2);
+                } else if (Verification.isVar(arg2, this)) {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            * get.getValueVar(arg2, this);
+                } else {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
+                            * registers[get.getRegisterIndex(arg2)];
+                }
+                return 1;
+            case "MOD":
+                if (registers[get.getRegisterIndex(arg1)] == 0) {
+                    return -1;
+                }
+                if (Verification.isConst(arg2)) {
+                    registers[get.getRegisterIndex(arg1)] = get.getValue(arg2) % registers[get.getRegisterIndex(arg1)];
+                } else if (Verification.isVar(arg2, this)) {
+                    registers[get.getRegisterIndex(arg1)] = get.getValueVar(arg2, this)
+                            % registers[get.getRegisterIndex(arg1)];
+                } else {
+                    registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg2)]
+                            % registers[get.getRegisterIndex(arg1)];
+                }
+                return 1;
+            case "INC":
+                registers[get.getRegisterIndex(arg1)]++;
+                return 1;
+            case "DEC":
+                registers[get.getRegisterIndex(arg1)]--;
+                return 1;
+            case "BEQ":
+                valeur_arg1 = get.getLaValeur(arg1, this);
+                valeur_arg2 = get.getLaValeur(arg2, this);
+                if (valeur_arg1 == valeur_arg2) {
+                    return 3;
+                }
+                return 4;
+            case "BNE":
+                valeur_arg1 = get.getLaValeur(arg1, this);
+                valeur_arg2 = get.getLaValeur(arg2, this);
+                if (valeur_arg1 != valeur_arg2) {
+                    return 3;
+                }
+                return 4;
+            case "BBG":
+                valeur_arg1 = get.getLaValeur(arg1, this);
+                valeur_arg2 = get.getLaValeur(arg2, this);
+                if (valeur_arg1 > valeur_arg2) {
+                    return 3;
+                }
+                return 4;
+            case "BSM":
+                valeur_arg1 = get.getLaValeur(arg1, this);
+                valeur_arg2 = get.getLaValeur(arg2, this);
+                if (valeur_arg1 < valeur_arg2) {
+                    return 3;
+                }
+                return 4;
+            case "JMP":
+                return 3;
+            case "SRL":
+                registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] << get.getValue(arg2);
+                return 1;
+            case "SLL":
+                registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)] >> get.getValue(arg2);
+                return 1;
             default:
                 System.out.println("Invalid instruction: " + opcode + " " + arg1 + " " + arg2 + " " + arg3);
                 return -1;
@@ -294,46 +344,38 @@ public class Simulator {
     }
 
     private void changeData(String var, int value) {
-        
+
         String data = get.getDataTextCalculus(this);
         String[] tokens = data.split(" ");
-        String[] variableName = new String[(tokens.length/2)] ;
-        String[] initialValue = new String[(tokens.length/2)] ;
-        int a = 0, e = 0, num_var=0;
+        String[] variableName = new String[(tokens.length / 2)];
+        String[] initialValue = new String[(tokens.length / 2)];
+        int e = 0;
         for (int token = 0; token < tokens.length; token++) {
             String donnee = tokens[token];
             if (donnee.equals(var)) {
                 tokens[token + 1] = String.valueOf(value);
             }
-            if( token % 2 == 0){
-                variableName[token/2] = tokens[token];
-            }else {
-                initialValue[token/2] = tokens[token];
+            if (token % 2 == 0) {
+                variableName[token / 2] = tokens[token];
+            } else {
+                initialValue[token / 2] = tokens[token];
             }
         }
-        for(int i=0;i<variableName.length;i++){
-            System.out.println(variableName[i]);
-            System.out.println(binaryConversion.toBinaryText(variableName[i])+".");
-            System.out.println(initialValue[i]);
-            System.out.println(binaryConversion.toBinaryNumber(Integer.parseInt(initialValue[i]))+".");
+        for (int i = 0; i < variableName.length; i++) {
+            int a = 0;
+            String[] variable = binaryConversion.toBinaryText(variableName[i]).split(" ");
+            String[] valeur = binaryConversion.toBinaryNumber(Integer.parseInt(initialValue[i])).split(" ");
+            for (int p = MEMORY_SIZE - 1; p > MEMORY_SIZE - variable.length - 1; p--) {
+                memorybinary[p - e] = variable[a];
+                a++;
+            }
+            e += variable.length + 1;
+            a = 3;
+            for (int z = MEMORY_SIZE - 1; z > MEMORY_SIZE - valeur.length - 1; z--) {
+                memorybinary[z - e] = valeur[a];
+                a--;
+            }
+            e += valeur.length + 1;
         }
-        
-         /*
-        System.out.println(binaryConversion.toBinaryText(variableName[3]));
-        String initialValue[] = binaryConversion.toBinaryNumber(Integer.parseInt(tokens[1])).split(" ");
-        
-        for (int i = MEMORY_SIZE - 1; i > MEMORY_SIZE - variableName.length - 1; i--) {
-
-            memorybinary[i - e] = variableName[a];
-            a++;
-        }
-        e += variableName.length + 1;
-        a = 3;
-        for (int z = MEMORY_SIZE - 1; z > MEMORY_SIZE - initialValue.length - 1; z--) {
-            memorybinary[z - e] = initialValue[a];
-            a--;
-        }
-        e += initialValue.length + 1;
-        */
     }
 }
