@@ -63,7 +63,7 @@ public class MyInterface extends JFrame {
         JLabel labelNext = new JLabel("Next instruction");
         GridBagConstraints constraints3 = new GridBagConstraints();
         constraints3.anchor = GridBagConstraints.WEST;
-        constraints3.insets = new Insets(10, 0, 10, 20);
+        constraints3.insets = new Insets(10, 0, 10, 200);
         constraints3.gridx = 0;
         constraints3.gridy = 0;
         registerPanel.add(labelNext, constraints3);
@@ -72,7 +72,7 @@ public class MyInterface extends JFrame {
         JLabel labelT0 = new JLabel("t0");
         GridBagConstraints constraints4 = new GridBagConstraints();
         constraints4.anchor = GridBagConstraints.WEST;
-        constraints4.insets = new Insets(10, 0, 10, 20);
+        constraints4.insets = new Insets(10, 0, 10, 200);
         constraints4.gridx = 0;
         constraints4.gridy = 1;
         registerPanel.add(labelT0, constraints4);
