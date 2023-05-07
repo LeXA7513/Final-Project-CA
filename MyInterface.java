@@ -1,11 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class MyInterface extends JFrame {
 
     public MyInterface() {
         super("Assembly Simulator");
-    
+
         // create a content pane with BoxLayout manager
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -184,6 +185,12 @@ public class MyInterface extends JFrame {
         // add the panel to the content pane
         contentPane.add(registerPanel);
 
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+        panel1.add(fileInfoPanel);
+        panel1.add(registerPanel);    
+        contentPane.add(panel1);
+
         JPanel memoryPanel = new JPanel(new GridBagLayout());
 
         // create a label for Variables
@@ -265,6 +272,22 @@ public class MyInterface extends JFrame {
 
         // add button to the content pane
         contentPane.add(buttonPanel);
+
+        JPanel containerPanel = new JPanel();
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
+        containerPanel.add(memoryPanel);
+        containerPanel.add(buttonPanel);
+        contentPane.add(containerPanel);
+
+        JPanel BigPanel = new JPanel();
+        BigPanel.setLayout(new BoxLayout(BigPanel, BoxLayout.X_AXIS));
+    
+        // add newPanel and newPanel3 to containerPanel
+        BigPanel.add(panel1);
+        BigPanel.add(containerPanel);
+    
+        // add containerPanel to the content pane
+        contentPane.add(BigPanel);
         
         pack();
         setLocationRelativeTo(null);
