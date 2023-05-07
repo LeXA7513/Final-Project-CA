@@ -1,8 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 public class MyInterface extends JFrame {
+
+    private static Simulator simulate = null;
+    private static JButton button2, button3, button4;
+    private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status;
+
 
     public MyInterface() {
         super("Assembly Simulator");
@@ -22,13 +29,13 @@ public class MyInterface extends JFrame {
         constraints.gridy = 0;
         fileInfoPanel.add(labelName, constraints);
 
-        JLabel labelname = new JLabel("Empty");
+        JLabel file_name = new JLabel("");
         GridBagConstraints constraints01 = new GridBagConstraints();
         constraints01.anchor = GridBagConstraints.WEST;
         constraints01.insets = new Insets(0, 0, 10, 20);
         constraints01.gridx = 0;
         constraints01.gridy = 5;
-        fileInfoPanel.add(labelname, constraints01);
+        fileInfoPanel.add(file_name, constraints01);
     
         // create a label for Status
         JLabel labelStatus = new JLabel("File Status");
@@ -39,26 +46,26 @@ public class MyInterface extends JFrame {
         constraints0.gridy = 6;
         fileInfoPanel.add(labelStatus, constraints0);
 
-        JLabel labelstatus = new JLabel("No File");
+        JLabel status = new JLabel("");
         GridBagConstraints constraints02 = new GridBagConstraints();
         constraints02.anchor = GridBagConstraints.WEST;
         constraints02.insets = new Insets(0, 0, 10, 20);
         constraints02.gridx = 0;
         constraints02.gridy = 7;
-        fileInfoPanel.add(labelstatus, constraints02);
+        fileInfoPanel.add(status, constraints02);
     
         // create a label for Code
-        JLabel labelCode = new JLabel("Code");
+        JLabel labelcode = new JLabel("Code");
         GridBagConstraints constraints1 = new GridBagConstraints();
         constraints1.anchor = GridBagConstraints.WEST;
         constraints1.insets = new Insets(10, 0, 10, 20);
         constraints1.gridx = 0;
         constraints1.gridy = 10;
-        fileInfoPanel.add(labelCode, constraints1);
+        fileInfoPanel.add(labelcode, constraints1);
     
         // create a text area with scroll pane
-        JTextArea textArea = new JTextArea(10, 30);
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        JTextArea code_text = new JTextArea(10, 30);
+        JScrollPane scrollPane = new JScrollPane(code_text);
         GridBagConstraints constraints2 = new GridBagConstraints();
         constraints2.anchor = GridBagConstraints.WEST;
         constraints2.insets = new Insets(0, 0, 0, 0);
@@ -102,13 +109,13 @@ public class MyInterface extends JFrame {
         constraints4.gridy = 3;
         registerPanel.add(labelT0, constraints4);
 
-        JLabel labelt0 = new JLabel("0");
+        JLabel count_t0 = new JLabel("0");
         GridBagConstraints constraints03 = new GridBagConstraints();
         constraints03.anchor = GridBagConstraints.WEST;
         constraints03.insets = new Insets(10, 0, 10, 0);
         constraints03.gridx = 1;
         constraints03.gridy = 3;
-        registerPanel.add(labelt0, constraints03);
+        registerPanel.add(count_t0, constraints03);
 
         // create a label for T1
         JLabel labelT1 = new JLabel("t1");
@@ -119,13 +126,13 @@ public class MyInterface extends JFrame {
         constraints5.gridy = 4;
         registerPanel.add(labelT1, constraints5);
 
-        JLabel labelt1 = new JLabel("0");
+        JLabel count_t1 = new JLabel("0");
         GridBagConstraints constraints04 = new GridBagConstraints();
         constraints04.anchor = GridBagConstraints.WEST;
         constraints04.insets = new Insets(10, 0, 10, 0);
         constraints04.gridx = 1;
         constraints04.gridy = 4;
-        registerPanel.add(labelt1, constraints04);
+        registerPanel.add(count_t1, constraints04);
 
         // create a label for T2
         JLabel labelT2 = new JLabel("t2");
@@ -136,13 +143,13 @@ public class MyInterface extends JFrame {
         constraints6.gridy = 5;
         registerPanel.add(labelT2, constraints6);
 
-        JLabel labelt2 = new JLabel("0");
+        JLabel count_t2 = new JLabel("0");
         GridBagConstraints constraints05 = new GridBagConstraints();
         constraints05.anchor = GridBagConstraints.WEST;
         constraints05.insets = new Insets(10, 0, 10, 0);
         constraints05.gridx = 1;
         constraints05.gridy = 5;
-        registerPanel.add(labelt2, constraints05);
+        registerPanel.add(count_t2, constraints05);
 
         // create a label for T3
         JLabel labelT3 = new JLabel("t3");
@@ -153,13 +160,13 @@ public class MyInterface extends JFrame {
         constraints7.gridy = 6;
         registerPanel.add(labelT3, constraints7);
 
-        JLabel labelt3 = new JLabel("0");
+        JLabel count_t3 = new JLabel("0");
         GridBagConstraints constraints06 = new GridBagConstraints();
         constraints06.anchor = GridBagConstraints.WEST;
         constraints06.insets = new Insets(10, 0, 10, 0);
         constraints06.gridx = 1;
         constraints06.gridy = 6;
-        registerPanel.add(labelt3, constraints06);
+        registerPanel.add(count_t3, constraints06);
 
         // create a label for PC
         JLabel labelPC = new JLabel("PC");
@@ -170,13 +177,13 @@ public class MyInterface extends JFrame {
         constraints8.gridy = 7;
         registerPanel.add(labelPC, constraints8);
 
-        JLabel labelpc = new JLabel("0");
+        JLabel count_pc = new JLabel("0");
         GridBagConstraints constraints07 = new GridBagConstraints();
         constraints07.anchor = GridBagConstraints.WEST;
         constraints07.insets = new Insets(10, 0, 10, 30);
         constraints07.gridx = 1;
         constraints07.gridy = 7;
-        registerPanel.add(labelpc, constraints07);
+        registerPanel.add(count_pc, constraints07);
 
         // set border for the panel
         registerPanel.setBorder(BorderFactory.createTitledBorder(
@@ -203,9 +210,9 @@ public class MyInterface extends JFrame {
         memoryPanel.add(labelVariables, constraints9);
 
         // create a text area with scrollpane
-        JTextArea textArea2 = new JTextArea(5, 20);
-        textArea2.setEditable(false);
-        JScrollPane scrollPane2 = new JScrollPane(textArea2);
+        JTextArea data_text = new JTextArea(5, 20);
+        data_text.setEditable(false);
+        JScrollPane scrollPane2 = new JScrollPane(data_text);
 
         GridBagConstraints constraints10 = new GridBagConstraints();
         constraints10.gridx = 0;
@@ -223,9 +230,9 @@ public class MyInterface extends JFrame {
         memoryPanel.add(labelStack, constraints11);
 
         // create a text area with scrollpane
-        JTextArea textArea3 = new JTextArea(5, 20);
-        textArea3.setEditable(false);
-        JScrollPane scrollPane3 = new JScrollPane(textArea3);
+        JTextArea stack_text = new JTextArea(5, 20);
+        stack_text.setEditable(false);
+        JScrollPane scrollPane3 = new JScrollPane(stack_text);
 
         GridBagConstraints constraints12 = new GridBagConstraints();
         constraints12.gridx = 0;
@@ -249,12 +256,56 @@ public class MyInterface extends JFrame {
         constraints13.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button1, constraints13);
 
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
+                    simulate = new Simulator(filePath);
+                    code_text.setText(get.getCode(simulate));
+                    data_text.setText(get.getDataText(simulate));
+                    status.setText("File Load");
+                    button2.setEnabled(true);
+                    button3.setEnabled(true);
+                    button4.setEnabled(true);
+                    file_name.setText(selectedFile.getName());
+                }
+            }
+        });        
+
         JButton button2 = new JButton("Check File");
         GridBagConstraints constraints14 = new GridBagConstraints();
         constraints14.gridx = 0;
         constraints14.gridy = 1;
         constraints14.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button2, constraints14);
+        button2.setEnabled(false);
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button3.setEnabled(false);
+                button4.setEnabled(false);
+                if (simulate != null) {
+                    try {
+                        String error = simulate.checkProgram(get.getCode(simulate));
+                        if (error == null) {
+                            status.setText("Checked program");
+                            button3.setEnabled(true);
+                            button4.setEnabled(true);
+                        } else {
+                            status.setText(error);
+                        }
+                    } catch (Exception ex) {
+                        status.setText(ex.getMessage());
+                    }
+
+                }
+            }
+        });
 
         JButton button3 = new JButton("Simulate");
         GridBagConstraints constraints15 = new GridBagConstraints();
@@ -262,6 +313,37 @@ public class MyInterface extends JFrame {
         constraints15.gridy = 2;
         constraints15.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button3, constraints15);
+        button3.setEnabled(false);
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button2.setEnabled(false);
+                button4.setEnabled(false);
+                if (simulate != null) {
+                    try {
+                        String error = simulate.simulateProgram(get.getCode(simulate), simulate.pc);
+                        if (error == null) {
+                            status.setText("Simulated Program");
+                            button3.setEnabled(false);
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
+                        } else {
+                            status.setText(error);
+                            System.out.println(error);
+                        }
+                    } catch (Exception ex) {
+                        status.setText(ex.getMessage());
+                        System.out.println(ex.getMessage());
+                    }
+
+                }
+            }
+        });
 
         JButton button4 = new JButton("Step Simulation");
         GridBagConstraints constraints16 = new GridBagConstraints();
@@ -269,6 +351,48 @@ public class MyInterface extends JFrame {
         constraints16.gridy = 3;
         constraints16.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button4, constraints16);
+        button4.setEnabled(false);
+        button4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button2.setEnabled(false);
+                if (simulate != null) {
+                    try {
+                        System.out.println(String.valueOf(simulate.pc));
+                        String error = simulate.simulateProgram1line(get.getCode(simulate), simulate.pc);
+                        if (error == null) {
+                            status.setText("Step-by-Step Simulated Program");
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
+                        } else if (error.equals("Simulated Program")) {
+                            status.setText(error);
+                            button3.setEnabled(false);
+                            button4.setEnabled(false);
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
+                        } else {
+                            status.setText(error);
+                            System.out.println(error);
+                        }
+                    } catch (Exception ex) {
+                        status.setText(ex.getMessage());
+                        System.out.println(ex.getMessage());
+                    }
+
+                }
+            }
+        });
+
 
         // add button to the content pane
         contentPane.add(buttonPanel);
@@ -288,6 +412,17 @@ public class MyInterface extends JFrame {
     
         // add containerPanel to the content pane
         contentPane.add(BigPanel);
+
+        
+        Font newLabelFont = new Font(BigPanel.getFont().getName(), Font.ITALIC, BigPanel.getFont().getSize());
+
+        file_name.setFont(newLabelFont);
+        count_pc.setFont(newLabelFont);
+        count_t0.setFont(newLabelFont);
+        count_t1.setFont(newLabelFont);
+        count_t2.setFont(newLabelFont);
+        count_t3.setFont(newLabelFont);
+        status.setFont(newLabelFont);
         
         pack();
         setLocationRelativeTo(null);
