@@ -5,15 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
 
-
-
 class Interface_test {
     private static Simulator simulate = null;
     private static JButton button2, button3, button4;
     private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status;
-    
+
     public static void main(String[] args) {
-        
+
         JFrame f = new JFrame("Simulator");
 
         JLabel label = new JLabel("File Info");
@@ -56,7 +54,7 @@ class Interface_test {
         JLabel label19 = new JLabel("t3");
         label19.setBounds(50, 370, 100, 30);
 
-        JLabel label120 = new JLabel("PC");  
+        JLabel label120 = new JLabel("PC");
         label120.setBounds(50, 390, 100, 30);
 
         count_t0 = new JLabel("0");
@@ -71,7 +69,7 @@ class Interface_test {
         count_t3 = new JLabel("0");
         count_t3.setBounds(200, 370, 100, 30);
 
-        count_pc = new JLabel("0");  
+        count_pc = new JLabel("0");
         count_pc.setBounds(200, 390, 100, 30);
 
         JLabel label20 = new JLabel("Memory Info");
@@ -90,7 +88,7 @@ class Interface_test {
         JTextArea stack_text = new JTextArea();
         stack_text.setEditable(false);
         stack_text.setBounds(400, 185, 150, 80);
-        
+
         JButton button = new JButton("Load File");
         button.setBounds(400, 280, 150, 30);
         button.addActionListener(new ActionListener() {
@@ -113,7 +111,7 @@ class Interface_test {
                 }
             }
         });
-        
+
         button2 = new JButton("Check File");
         button2.setEnabled(false);
         button2.setBounds(400, 320, 150, 30);
@@ -122,25 +120,24 @@ class Interface_test {
             public void actionPerformed(ActionEvent e) {
                 button3.setEnabled(false);
                 button4.setEnabled(false);
-                if (simulate != null) { 
+                if (simulate != null) {
                     try {
                         String error = simulate.checkProgram(get.getCode(simulate));
-                        if(error==null){
-                        status.setText("Checked program");
-                        button3.setEnabled(true);
-                        button4.setEnabled(true);}
-                        else {
+                        if (error == null) {
+                            status.setText("Checked program");
+                            button3.setEnabled(true);
+                            button4.setEnabled(true);
+                        } else {
                             status.setText(error);
                         }
                     } catch (Exception ex) {
                         status.setText(ex.getMessage());
                     }
-                    
-                }              
+
+                }
             }
         });
 
-        
         button3 = new JButton("Simulate");
         button3.setEnabled(false);
         button3.setBounds(400, 360, 150, 30);
@@ -149,22 +146,20 @@ class Interface_test {
             public void actionPerformed(ActionEvent e) {
                 button2.setEnabled(false);
                 button4.setEnabled(false);
-                if (simulate != null) { 
+                if (simulate != null) {
                     try {
-                        String error = simulate.simulateProgram(get.getCode(simulate));
-                        if(error==null){
-                        status.setText("Program Simulate");
-                        button2.setEnabled(true);
-                        button4.setEnabled(true);
-                        count_t0.setText(String.valueOf(simulate.registers[0]));
-                        count_t1.setText(String.valueOf(simulate.registers[1]));
-                        count_t2.setText(String.valueOf(simulate.registers[2]));
-                        count_t3.setText(String.valueOf(simulate.registers[3]));
-                        data_text.setText(get.getDataText(simulate));
-                        count_pc.setText(String.valueOf(simulate.pc));
-                        stack_text.setText(get.getStackText(simulate));
-                        }
-                        else {
+                        String error = simulate.simulateProgram(get.getCode(simulate), simulate.pc);
+                        if (error == null) {
+                            status.setText("Simulated Program");
+                            button3.setEnabled(false);
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
+                        } else {
                             status.setText(error);
                             System.out.println(error);
                         }
@@ -172,8 +167,8 @@ class Interface_test {
                         status.setText(ex.getMessage());
                         System.out.println(ex.getMessage());
                     }
-                    
-                }              
+
+                }
             }
         });
 
@@ -184,22 +179,31 @@ class Interface_test {
             @Override
             public void actionPerformed(ActionEvent e) {
                 button2.setEnabled(false);
-                if (simulate != null) { 
+                if (simulate != null) {
                     try {
-                        String error = simulate.simulateProgram(get.getCode(simulate));
-                        if(error==null){
-                        status.setText("Program Simulate");
-                        button2.setEnabled(true);
-                        button4.setEnabled(true);
-                        count_t0.setText(String.valueOf(simulate.registers[0]));
-                        count_t1.setText(String.valueOf(simulate.registers[1]));
-                        count_t2.setText(String.valueOf(simulate.registers[2]));
-                        count_t3.setText(String.valueOf(simulate.registers[3]));
-                        data_text.setText(get.getDataText(simulate));
-                        count_pc.setText(String.valueOf(simulate.pc));
-                        stack_text.setText(get.getStackText(simulate));
-                        }
-                        else {
+                        System.out.println(String.valueOf(simulate.pc));
+                        String error = simulate.simulateProgram1line(get.getCode(simulate), simulate.pc);
+                        if (error == null) {
+                            status.setText("Step-by-Step Simulated Program");
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
+                        } else if (error.equals("Simulated Program")) {
+                            status.setText(error);
+                            button3.setEnabled(false);
+                            button4.setEnabled(false);
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
+                        } else {
                             status.setText(error);
                             System.out.println(error);
                         }
@@ -207,12 +211,12 @@ class Interface_test {
                         status.setText(ex.getMessage());
                         System.out.println(ex.getMessage());
                     }
-                    
-                }              
+
+                }
             }
         });
 
-        Font newLabelFont=new Font(label.getFont().getName(),Font.ITALIC,label.getFont().getSize());
+        Font newLabelFont = new Font(label.getFont().getName(), Font.ITALIC, label.getFont().getSize());
 
         file_name.setFont(newLabelFont);
         count_pc.setFont(newLabelFont);
@@ -221,7 +225,6 @@ class Interface_test {
         count_t2.setFont(newLabelFont);
         count_t3.setFont(newLabelFont);
         status.setFont(newLabelFont);
-
 
         f.add(label);
         f.add(label21);
@@ -242,7 +245,7 @@ class Interface_test {
         f.add(label21);
         f.add(label23);
         f.add(file_name);
-        //f.add(textArea2);
+        // f.add(textArea2);
         f.add(button);
         f.add(button2);
         f.add(button3);
@@ -254,8 +257,7 @@ class Interface_test {
         f.add(count_pc);
         f.add(status);
 
-
-        f.setSize(700,500);
+        f.setSize(700, 500);
         f.setLayout(null);
         f.setVisible(true);
     }

@@ -11,7 +11,6 @@ public class Simulator {
     public List<Integer> stack;
     public List<String> variableNameVerification;
     public int pc;
-    private int numberlineCode, numberVar = 0, LimitCode;
 
     public Simulator(String filePath) {
         memorybinary = new String[MEMORY_SIZE];
@@ -63,9 +62,7 @@ public class Simulator {
                     }
                     e += initialValue.length + 1;
                     variableNameVerification.add(tokens[0]);
-                    numberVar++;
                 } else if (isCodeSection) {
-                    numberlineCode++;
                     String text_to_add = binaryConversion.toBinaryText(line) + " 00001101 00001010 ";
                     String lettres[] = text_to_add.split(" ");
                     for (i = 0; i < lettres.length; i++) {
@@ -75,7 +72,6 @@ public class Simulator {
                 }
 
             }
-            LimitCode = n;
 
             reader.close();
         } catch (Exception e) {
@@ -122,7 +118,7 @@ public class Simulator {
 
     }
 
-    public String simulateProgram(String code) throws Exception {
+    public String simulateProgram(String code, int begin_line) throws Exception {
         String[] lines = binaryConversion.toBinaryText(code).split("00001101 00001010");
         lines[0] = binaryConversion.fromBinaryText(lines[0]);
 
@@ -131,7 +127,7 @@ public class Simulator {
             lines[i] = binaryConversion.fromBinaryText(MyString.deleteCharAt(0).toString());
         }
         int numline;
-        for (numline = 0; numline < lines.length; numline++) {
+        for (numline = begin_line; numline < lines.length; numline++) {
             String line = lines[numline];
             String[] tokens = line.split(" ");
             String opcode = tokens[0].toUpperCase();
@@ -167,6 +163,54 @@ public class Simulator {
                 }
             }
         }
+        return null;
+
+    }
+
+    public String simulateProgram1line(String code, int begin_line) throws Exception {
+        String[] lines = binaryConversion.toBinaryText(code).split("00001101 00001010");
+        lines[0] = binaryConversion.fromBinaryText(lines[0]);
+
+        for (int i = 1; i < lines.length; i++) {
+            StringBuilder MyString = new StringBuilder(lines[i]);
+            lines[i] = binaryConversion.fromBinaryText(MyString.deleteCharAt(0).toString());
+        }
+        int numline = begin_line;
+        String line = lines[numline];
+        String[] tokens = line.split(" ");
+        String opcode = tokens[0].toUpperCase();
+            if (tokens.length != get.getInstructionSize(opcode)) {
+                return "Invalid size instruction: " + line;
+            }
+            String arg1 = null, arg2 = null, arg3 = null, reponse = null;
+            if (get.getInstructionSize(opcode) == 2) {
+                arg1 = tokens[1].toUpperCase();
+                reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
+            } else if (get.getInstructionSize(opcode) == 3) {
+                arg1 = tokens[1].toUpperCase();
+                arg2 = tokens[2].toUpperCase();
+                reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
+            } else if (get.getInstructionSize(opcode) == 4) {
+                arg1 = tokens[1].toUpperCase();
+                arg2 = tokens[2].toUpperCase();
+                arg3 = tokens[3].toUpperCase();
+                reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
+            }
+            pc = numline + 1;
+            if (reponse != null) {
+                return "Line " + pc + " : " + reponse;
+            }
+            int interrogation = execute(opcode, arg1, arg2, arg3);
+            if (interrogation == 0) {
+                return "Simulated Program";
+            } else if (interrogation == 3) {
+                if (arg3 != null) {
+                    numline = get.getLaValeur(arg3, this) - 2;
+                } else {
+                    numline = get.getLaValeur(arg1, this) - 2;
+                }
+            }
+        
         return null;
 
     }
