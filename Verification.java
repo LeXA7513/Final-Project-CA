@@ -22,6 +22,27 @@ public class Verification {
         return false;
     }
     
+    public static boolean isLabel(String arg, Simulator simulation) {
+        for (String c : simulation.label.keySet()) {
+            if (c.equals(arg.substring(0, arg.length() - 1))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isLabelArg(String arg, Simulator simulation) {
+        System.out.println(arg);
+        for (String c : simulation.label.keySet()) {
+            if (c.equals(arg)) {
+                System.out.println("IS LaBeL");
+                return true;
+            }
+        }
+        System.out.println("NOT LaBeL");
+        return false;
+    }
+
     public static boolean isVarIndirect(String arg, Simulator simulation) {
         Pattern pattern = Pattern.compile("[-+]\\d+$");
         Matcher matcher = pattern.matcher(arg);

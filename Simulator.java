@@ -10,12 +10,14 @@ public class Simulator {
     public int[] registers;
     public List<Integer> stack;
     public List<String> variableNameVerification;
+    public HashMap<String, Integer> label = new HashMap<String, Integer>();
     public int pc;
 
     public Simulator(String filePath) {
         memorybinary = new String[MEMORY_SIZE];
         registers = new int[REGISTER_COUNT];
         variableNameVerification = new ArrayList<String>();
+        label = new HashMap<String, Integer>();
         stack = new ArrayList<Integer>();
 
         loadProgram(filePath);
@@ -24,10 +26,11 @@ public class Simulator {
     private void loadProgram(String filePath) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            int i, n = 0, e = 0;
+            int i, n = 0, e = 0, num_ligne = 0;
             String line;
             boolean isDataSection = false, isCodeSection = false;
             while ((line = reader.readLine()) != null) {
+                
                 line = line.trim();
 
                 if (line.startsWith("!") || line.isEmpty()) {
@@ -67,12 +70,16 @@ public class Simulator {
                     String lettres[] = text_to_add.split(" ");
                     for (i = 0; i < lettres.length; i++) {
                         memorybinary[n + i] = lettres[i];
+                        if(lettres[i].equals("00111010")){
+                            String token[] = line.split(" ");
+                            label.put(token[0].substring(0, token[0].length() - 1),num_ligne);
+                        }
                     }
                     n += lettres.length;
+                    num_ligne ++;
                 }
 
             }
-
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,22 +97,22 @@ public class Simulator {
 
         for (String line : lines) {
             String[] tokens = line.split(" ");
-            String opcode = tokens[0].toUpperCase();
-            if (tokens.length != get.getInstructionSize(opcode)) {
+            String opcode = tokens[0];
+            if (tokens.length != get.getInstructionSize(opcode,this)) {
                 return "Invalid size instruction: " + line;
             }
             String arg1 = null, arg2 = null, arg3 = null, reponse = null;
-            if (get.getInstructionSize(opcode) == 2) {
-                arg1 = tokens[1].toUpperCase();
+            if (get.getInstructionSize(opcode,this) == 2) {
+                arg1 = tokens[1];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
-            } else if (get.getInstructionSize(opcode) == 3) {
-                arg1 = tokens[1].toUpperCase();
-                arg2 = tokens[2].toUpperCase();
+            } else if (get.getInstructionSize(opcode,this) == 3) {
+                arg1 = tokens[1];
+                arg2 = tokens[2];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
-            } else if (get.getInstructionSize(opcode) == 4) {
-                arg1 = tokens[1].toUpperCase();
-                arg2 = tokens[2].toUpperCase();
-                arg3 = tokens[3].toUpperCase();
+            } else if (get.getInstructionSize(opcode,this) == 4) {
+                arg1 = tokens[1];
+                arg2 = tokens[2];
+                arg3 = tokens[3];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
             }
             if (reponse != null) {
@@ -130,22 +137,22 @@ public class Simulator {
         for (numline = begin_line; numline < lines.length; numline++) {
             String line = lines[numline];
             String[] tokens = line.split(" ");
-            String opcode = tokens[0].toUpperCase();
-            if (tokens.length != get.getInstructionSize(opcode)) {
+            String opcode = tokens[0];
+            if (tokens.length != get.getInstructionSize(opcode,this)) {
                 return "Invalid size instruction: " + line;
             }
             String arg1 = null, arg2 = null, arg3 = null, reponse = null;
-            if (get.getInstructionSize(opcode) == 2) {
-                arg1 = tokens[1].toUpperCase();
+            if (get.getInstructionSize(opcode,this) == 2) {
+                arg1 = tokens[1];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
-            } else if (get.getInstructionSize(opcode) == 3) {
-                arg1 = tokens[1].toUpperCase();
-                arg2 = tokens[2].toUpperCase();
+            } else if (get.getInstructionSize(opcode,this) == 3) {
+                arg1 = tokens[1];
+                arg2 = tokens[2];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
-            } else if (get.getInstructionSize(opcode) == 4) {
-                arg1 = tokens[1].toUpperCase();
-                arg2 = tokens[2].toUpperCase();
-                arg3 = tokens[3].toUpperCase();
+            } else if (get.getInstructionSize(opcode,this) == 4) {
+                arg1 = tokens[1];
+                arg2 = tokens[2];
+                arg3 = tokens[3];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
             }
             pc = numline + 1;
@@ -157,9 +164,9 @@ public class Simulator {
                 break;
             } else if (interrogation == 3) {
                 if (arg3 != null) {
-                    numline = get.getLaValeur(arg3, this) - 2;
+                    numline = get.getLineLabel(arg3, this) - 2;
                 } else {
-                    numline = get.getLaValeur(arg1, this) - 2;
+                    numline = get.getLineLabel(arg1, this) - 2;
                 }
             }
         }
@@ -178,22 +185,22 @@ public class Simulator {
         int numline = begin_line;
         String line = lines[numline];
         String[] tokens = line.split(" ");
-        String opcode = tokens[0].toUpperCase();
-            if (tokens.length != get.getInstructionSize(opcode)) {
+        String opcode = tokens[0];
+            if (tokens.length != get.getInstructionSize(opcode,this)) {
                 return "Invalid size instruction: " + line;
             }
             String arg1 = null, arg2 = null, arg3 = null, reponse = null;
-            if (get.getInstructionSize(opcode) == 2) {
-                arg1 = tokens[1].toUpperCase();
+            if (get.getInstructionSize(opcode,this) == 2) {
+                arg1 = tokens[1];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
-            } else if (get.getInstructionSize(opcode) == 3) {
-                arg1 = tokens[1].toUpperCase();
-                arg2 = tokens[2].toUpperCase();
+            } else if (get.getInstructionSize(opcode,this) == 3) {
+                arg1 = tokens[1];
+                arg2 = tokens[2];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
-            } else if (get.getInstructionSize(opcode) == 4) {
-                arg1 = tokens[1].toUpperCase();
-                arg2 = tokens[2].toUpperCase();
-                arg3 = tokens[3].toUpperCase();
+            } else if (get.getInstructionSize(opcode,this) == 4) {
+                arg1 = tokens[1];
+                arg2 = tokens[2];
+                arg3 = tokens[3];
                 reponse = get.getGoodData(opcode, arg1, arg2, arg3, this);
             }
             pc = numline + 1;
@@ -205,9 +212,9 @@ public class Simulator {
                 return "Simulated Program";
             } else if (interrogation == 3) {
                 if (arg3 != null) {
-                    numline = get.getLaValeur(arg3, this) - 2;
+                    numline = get.getLineLabel(arg3, this) - 2;
                 } else {
-                    numline = get.getLaValeur(arg1, this) - 2;
+                    numline = get.getLineLabel(arg1, this) - 2;
                 }
             }
         
@@ -239,6 +246,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             + get.getValueVar(arg2, this);
+                }else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] = get.getValueVarIndirect(arg2, this) + registers[get.getRegisterIndex(arg1)];
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             + registers[get.getRegisterIndex(arg2)];
@@ -247,10 +256,17 @@ public class Simulator {
             case "HLT":
                 return 0;
             case "STR":
+                if(Verification.isVar(arg1, this)){
                 if (Verification.isConst(arg2)) {
                     this.changeData(arg1, get.getValue(arg2));
                 } else {
                     this.changeData(arg1, registers[get.getRegisterIndex(arg2)]);
+                }} else {
+                    if (Verification.isConst(arg2)) {
+                        this.changeData(get.getNameVarIndirect(arg1, this), get.getValue(arg2));
+                    } else {
+                        this.changeData(get.getNameVarIndirect(arg1, this), registers[get.getRegisterIndex(arg2)]);
+                    }   
                 }
                 return 2;
 
@@ -259,6 +275,8 @@ public class Simulator {
                     this.stack.add(get.getValue(arg1));
                 } else if (Verification.isReg(arg1)) {
                     this.stack.add(registers[get.getRegisterIndex(arg1)]);
+                }else if (Verification.isVarIndirect(arg2, this)){
+                    this.stack.add(get.getValueVarIndirect(arg2, this));
                 } else {
                     this.stack.add(get.getValueVar(arg1, this));
                 }
@@ -275,6 +293,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             & get.getValueVar(arg2, this);
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] = get.getValueVarIndirect(arg2, this) & registers[get.getRegisterIndex(arg1)];
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             & registers[get.getRegisterIndex(arg2)];
@@ -286,6 +306,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             | get.getValueVar(arg2, this);
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] = get.getValueVarIndirect(arg2, this) | registers[get.getRegisterIndex(arg1)];
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             | registers[get.getRegisterIndex(arg2)];
@@ -300,6 +322,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             - get.getValueVar(arg2, this);
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] =  registers[get.getRegisterIndex(arg1)] - get.getValueVarIndirect(arg2, this);
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             - registers[get.getRegisterIndex(arg2)];
@@ -314,6 +338,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = get.getValueVar(arg2, this)
                             / registers[get.getRegisterIndex(arg1)];
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] =  get.getValueVarIndirect(arg2, this) / registers[get.getRegisterIndex(arg1)];
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg2)]
                             / registers[get.getRegisterIndex(arg1)];
@@ -325,6 +351,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             * get.getValueVar(arg2, this);
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] =  get.getValueVarIndirect(arg2, this) * registers[get.getRegisterIndex(arg1)];
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg1)]
                             * registers[get.getRegisterIndex(arg2)];
@@ -339,6 +367,8 @@ public class Simulator {
                 } else if (Verification.isVar(arg2, this)) {
                     registers[get.getRegisterIndex(arg1)] = get.getValueVar(arg2, this)
                             % registers[get.getRegisterIndex(arg1)];
+                } else if (Verification.isVarIndirect(arg2, this)){
+                    registers[get.getRegisterIndex(arg1)] =  get.getValueVarIndirect(arg2, this) % registers[get.getRegisterIndex(arg1)];
                 } else {
                     registers[get.getRegisterIndex(arg1)] = registers[get.getRegisterIndex(arg2)]
                             % registers[get.getRegisterIndex(arg1)];

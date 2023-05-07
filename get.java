@@ -95,8 +95,8 @@ public class get {
         }
     }
 
-    public static int getInstructionSize(String opcode) throws Exception {
-        switch (opcode.toUpperCase()) {
+    public static int getInstructionSize(String opcode, Simulator simulation) throws Exception {
+        switch (opcode) {
             case "LDA":
                 return 3;
             case "STR":
@@ -142,13 +142,25 @@ public class get {
             case "SRR":
                 return 3;
             default:
+                if(Verification.isLabel(opcode,simulation)){
+                    return 1;
+                }
                 throw new Exception("Invalid opcode: " + opcode);
         }
     }
 
+    public static int getLineLabel(String arg, Simulator simulation) {
+        for (String c : simulation.label.keySet()) {
+            if (c.equals(arg)) {
+                return simulation.label.get(c);
+            }
+        }
+        return 0;
+    }
+
     public static String getGoodData(String opcode, String arg1, String arg2, String arg3, Simulator simulation)
             throws Exception {
-        switch (opcode.toUpperCase()) {
+        switch (opcode) {
             case "LDA":
                 if (!Verification.isReg(arg1)) {
                     return "1st arg wrong type or non-existent";
@@ -251,7 +263,7 @@ public class get {
                 } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
-                } else if (!Verification.isConst(arg3)) {
+                } else if (!Verification.isLabelArg(arg3,simulation)) {
                     return "3rd arg wrong type or non-existent";
                 }
                 return null;
@@ -261,7 +273,7 @@ public class get {
                 } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
-                } else if (!Verification.isConst(arg3)) {
+                } else if (!Verification.isLabelArg(arg3,simulation)) {
                     return "3rd arg wrong type or non-existent";
                 }
                 return null;
@@ -271,7 +283,7 @@ public class get {
                 } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
-                } else if (!Verification.isConst(arg3)) {
+                } else if (!Verification.isLabelArg(arg3,simulation)) {
                     return "3rd arg wrong type or non-existent";
                 }
                 return null;
@@ -281,12 +293,12 @@ public class get {
                 } else if (!Verification.isReg(arg2) & !Verification.isVar(arg2, simulation) & !Verification.isVarIndirect(arg2, simulation)
                         & !Verification.isConst(arg2)) {
                     return "2nd arg wrong type or non-existent";
-                } else if (!Verification.isConst(arg3)) {
+                } else if (!Verification.isLabelArg(arg3,simulation)) {
                     return "3rd arg wrong type or non-existent";
                 }
                 return null;
             case "JMP":
-                if (!Verification.isConst(arg1)) {
+                if (!Verification.isLabelArg(arg1,simulation)) {
                     return "1st arg wrong type or non-existent";
                 }
                 return null;
@@ -334,15 +346,34 @@ public class get {
         Pattern pattern = Pattern.compile("[-+]\\d+$");
         Matcher matcher = pattern.matcher(arg);
         String arg1 = arg.replaceAll("[-+]\\d+$", "");
+        if(matcher.find()){
         for (int token = 0; token < tokens.length; token++) {
             String donnee = tokens[token];
             if (donnee.equals(arg1)) {
-                System.out.println(tokens[token + 1+(Integer.parseInt(matcher.group())*2)]);
                 int value = get.getValue(tokens[token + 1+(Integer.parseInt(matcher.group())*2)]);
                 return value;
             }
-        }
+        }}
+        
         return 0;
+    }
+
+    public static String getNameVarIndirect(String arg, Simulator simulate) {
+        String data = get.getDataTextCalculus(simulate);
+        String[] tokens = data.split(" ");
+        Pattern pattern = Pattern.compile("[-+]\\d+$");
+        Matcher matcher = pattern.matcher(arg);
+        String arg1 = arg.replaceAll("[-+]\\d+$", "");
+        if(matcher.find()){
+        for (int token = 0; token < tokens.length; token++) {
+            String donnee = tokens[token];
+            if (donnee.equals(arg1)) {
+                String value = tokens[token +(Integer.parseInt(matcher.group())*2)];
+                return value;
+            }
+        }}
+        
+        return null;
     }
 
     public static int getLaValeur(String arg, Simulator simulation) throws Exception {
