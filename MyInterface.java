@@ -49,7 +49,7 @@ public class MyInterface extends JFrame {
         JLabel status = new JLabel("");
         GridBagConstraints constraints02 = new GridBagConstraints();
         constraints02.anchor = GridBagConstraints.WEST;
-        constraints02.insets = new Insets(0, 0, 10, 20);
+        constraints02.insets = new Insets(0, 0, 0, 20);
         constraints02.gridx = 0;
         constraints02.gridy = 7;
         fileInfoPanel.add(status, constraints02);
@@ -68,7 +68,7 @@ public class MyInterface extends JFrame {
         JScrollPane scrollPane = new JScrollPane(code_text);
         GridBagConstraints constraints2 = new GridBagConstraints();
         constraints2.anchor = GridBagConstraints.WEST;
-        constraints2.insets = new Insets(0, 0, 0, 0);
+        constraints2.insets = new Insets(10, 0, 0, 0);
         constraints2.gridx = 0;
         constraints2.gridy = 12;
         fileInfoPanel.add(scrollPane, constraints2);
@@ -184,6 +184,15 @@ public class MyInterface extends JFrame {
         constraints07.gridx = 1;
         constraints07.gridy = 7;
         registerPanel.add(count_pc, constraints07);
+
+        JLabel labelPC1 = new JLabel("");
+        GridBagConstraints constraints90 = new GridBagConstraints();
+        constraints90.anchor = GridBagConstraints.WEST;
+        constraints90.insets = new Insets(10, 0, 10, 300);
+        constraints90.gridx = 1;
+        constraints90.gridy = 8;
+        registerPanel.add(labelPC1, constraints90);
+
 
         // set border for the panel
         registerPanel.setBorder(BorderFactory.createTitledBorder(
