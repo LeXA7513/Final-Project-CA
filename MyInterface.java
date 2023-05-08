@@ -7,18 +7,17 @@ import java.io.File;
 public class MyInterface extends JFrame {
 
     private static Simulator simulate = null;
-    private static JButton button2, button3, button4;
-    private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status;
+    private static JButton button2, button3, button4,button1;
+    private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status, data_text, stack_text, code_text, labelnext;
 
 
     public MyInterface() {
         super("Assembly Simulator");
 
-        // create a content pane with BoxLayout manager
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
     
-        // create a new panel with GridBagLayout manager for File Info
+
         JPanel fileInfoPanel = new JPanel(new GridBagLayout());
     
         JLabel labelName = new JLabel("File Name");
@@ -37,7 +36,6 @@ public class MyInterface extends JFrame {
         constraints01.gridy = 5;
         fileInfoPanel.add(file_name, constraints01);
     
-        // create a label for Status
         JLabel labelStatus = new JLabel("File Status");
         GridBagConstraints constraints0 = new GridBagConstraints();
         constraints0.anchor = GridBagConstraints.WEST;
@@ -54,7 +52,6 @@ public class MyInterface extends JFrame {
         constraints02.gridy = 7;
         fileInfoPanel.add(status, constraints02);
     
-        // create a label for Code
         JLabel labelcode = new JLabel("Code");
         GridBagConstraints constraints1 = new GridBagConstraints();
         constraints1.anchor = GridBagConstraints.WEST;
@@ -63,7 +60,6 @@ public class MyInterface extends JFrame {
         constraints1.gridy = 10;
         fileInfoPanel.add(labelcode, constraints1);
     
-        // create a text area with scroll pane
         JTextArea code_text = new JTextArea(10, 35);
         JScrollPane scrollPane = new JScrollPane(code_text);
         GridBagConstraints constraints2 = new GridBagConstraints();
@@ -73,17 +69,15 @@ public class MyInterface extends JFrame {
         constraints2.gridy = 12;
         fileInfoPanel.add(scrollPane, constraints2);
     
-        // set border for the panel
         fileInfoPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "File Info"));
     
-        // add the panel to the content pane
         contentPane.add(fileInfoPanel);
+
+
     
-        // create a new panel with GridBagLayout manager for Register
         JPanel registerPanel = new JPanel(new GridBagLayout());
     
-        // create a label for Next instruction
         JLabel labelNext = new JLabel("Next instruction");
         GridBagConstraints constraints3 = new GridBagConstraints();
         constraints3.anchor = GridBagConstraints.WEST;
@@ -100,7 +94,6 @@ public class MyInterface extends JFrame {
         constraints00.gridy = 1;
         registerPanel.add(labelnext, constraints00);
     
-        // create a label for T0
         JLabel labelT0 = new JLabel("t0");
         GridBagConstraints constraints4 = new GridBagConstraints();
         constraints4.anchor = GridBagConstraints.WEST;
@@ -117,7 +110,6 @@ public class MyInterface extends JFrame {
         constraints03.gridy = 3;
         registerPanel.add(count_t0, constraints03);
 
-        // create a label for T1
         JLabel labelT1 = new JLabel("t1");
         GridBagConstraints constraints5 = new GridBagConstraints();
         constraints5.anchor = GridBagConstraints.WEST;
@@ -134,7 +126,6 @@ public class MyInterface extends JFrame {
         constraints04.gridy = 4;
         registerPanel.add(count_t1, constraints04);
 
-        // create a label for T2
         JLabel labelT2 = new JLabel("t2");
         GridBagConstraints constraints6 = new GridBagConstraints();
         constraints6.anchor = GridBagConstraints.WEST;
@@ -151,7 +142,6 @@ public class MyInterface extends JFrame {
         constraints05.gridy = 5;
         registerPanel.add(count_t2, constraints05);
 
-        // create a label for T3
         JLabel labelT3 = new JLabel("t3");
         GridBagConstraints constraints7 = new GridBagConstraints();
         constraints7.anchor = GridBagConstraints.WEST;
@@ -168,7 +158,6 @@ public class MyInterface extends JFrame {
         constraints06.gridy = 6;
         registerPanel.add(count_t3, constraints06);
 
-        // create a label for PC
         JLabel labelPC = new JLabel("PC");
         GridBagConstraints constraints8 = new GridBagConstraints();
         constraints8.anchor = GridBagConstraints.WEST;
@@ -194,12 +183,11 @@ public class MyInterface extends JFrame {
         registerPanel.add(labelPC1, constraints90);
 
 
-        // set border for the panel
         registerPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Register"));
     
-        // add the panel to the content pane
         contentPane.add(registerPanel);
+
 
         JPanel panel1 = new JPanel();
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
@@ -207,9 +195,11 @@ public class MyInterface extends JFrame {
         panel1.add(registerPanel);    
         contentPane.add(panel1);
 
+
+
+
         JPanel memoryPanel = new JPanel(new GridBagLayout());
 
-        // create a label for Variables
         JLabel labelVariables = new JLabel("Variables");
         GridBagConstraints constraints9 = new GridBagConstraints();
         constraints9.anchor = GridBagConstraints.WEST;
@@ -218,7 +208,6 @@ public class MyInterface extends JFrame {
         constraints9.gridy = 0;
         memoryPanel.add(labelVariables, constraints9);
 
-        // create a text area with scrollpane
         JTextArea data_text = new JTextArea(5, 20);
         data_text.setEditable(false);
         JScrollPane scrollPane2 = new JScrollPane(data_text);
@@ -229,7 +218,6 @@ public class MyInterface extends JFrame {
         constraints10.gridwidth = 2;
         memoryPanel.add(scrollPane2, constraints10);
 
-        // create a label for Stack
         JLabel labelStack = new JLabel("Stack");
         GridBagConstraints constraints11 = new GridBagConstraints();
         constraints11.anchor = GridBagConstraints.WEST;
@@ -238,7 +226,6 @@ public class MyInterface extends JFrame {
         constraints11.gridy = 2;
         memoryPanel.add(labelStack, constraints11);
 
-        // create a text area with scrollpane
         JTextArea stack_text = new JTextArea(5, 20);
         stack_text.setEditable(false);
         JScrollPane scrollPane3 = new JScrollPane(stack_text);
@@ -249,13 +236,12 @@ public class MyInterface extends JFrame {
         constraints12.gridwidth = 2;
         memoryPanel.add(scrollPane3, constraints12);
 
-
-
-        // set border for the panel
         memoryPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Memory info"));
-        // add the panel to the content pane
+
         contentPane.add(memoryPanel);
+
+
 
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -266,7 +252,6 @@ public class MyInterface extends JFrame {
         constraints13.gridy = 0;
         constraints13.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button1, constraints13);
-
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -286,7 +271,9 @@ public class MyInterface extends JFrame {
                     file_name.setText(selectedFile.getName());
                 }
             }
-        });        
+        });
+
+                
 
         JButton button2 = new JButton("Check File");
         GridBagConstraints constraints14 = new GridBagConstraints();
@@ -369,7 +356,6 @@ public class MyInterface extends JFrame {
                 button2.setEnabled(false);
                 if (simulate != null) {
                     try {
-                        System.out.println(String.valueOf(simulate.pc));
                         String error = simulate.simulateProgram1line(get.getCode(simulate), simulate.pc);
                         if (error == null) {
                             status.setText("Step-by-Step Simulated Program");
@@ -404,9 +390,8 @@ public class MyInterface extends JFrame {
             }
         });
 
-
-        // add button to the content pane
         contentPane.add(buttonPanel);
+
 
         JPanel containerPanel = new JPanel();
         containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
@@ -414,15 +399,14 @@ public class MyInterface extends JFrame {
         containerPanel.add(buttonPanel);
         contentPane.add(containerPanel);
 
+
+
         JPanel BigPanel = new JPanel();
         BigPanel.setLayout(new BoxLayout(BigPanel, BoxLayout.X_AXIS));
-    
-        // add newPanel and newPanel3 to containerPanel
         BigPanel.add(panel1);
-        BigPanel.add(containerPanel);
-    
-        // add containerPanel to the content pane
+        BigPanel.add(containerPanel);  
         contentPane.add(BigPanel);
+        
 
         
         Font newLabelFont = new Font(BigPanel.getFont().getName(), Font.ITALIC, BigPanel.getFont().getSize());
