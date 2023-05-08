@@ -198,6 +198,8 @@ class Interface {
                             System.out.println(error);
                         }
                     } catch (Exception ex) {
+                        button3.setEnabled(false);
+                        button4.setEnabled(false);
                         status.setText(ex.getMessage());
                         next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         System.out.println(ex.getMessage());
@@ -244,6 +246,8 @@ class Interface {
                             System.out.println(error);
                         }
                     } catch (Exception ex) {
+                        button3.setEnabled(false);
+                        button4.setEnabled(false);
                         status.setText(ex.getMessage());
                         next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         System.out.println(ex.getMessage());
