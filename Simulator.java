@@ -141,6 +141,7 @@ public class Simulator {
             if (tokens.length != get.getInstructionSize(opcode,this)) {
                 return "Invalid size instruction: " + line;
             }
+            System.out.println(line);
             String arg1 = null, arg2 = null, arg3 = null, reponse = null;
             if (get.getInstructionSize(opcode,this) == 2) {
                 arg1 = tokens[1];
@@ -164,9 +165,9 @@ public class Simulator {
                 break;
             } else if (interrogation == 3) {
                 if (arg3 != null) {
-                    numline = get.getLineLabel(arg3, this) - 2;
+                    numline = get.getLineLabel(arg3, this) - 1;
                 } else {
-                    numline = get.getLineLabel(arg1, this) - 2;
+                    numline = get.getLineLabel(arg1, this) - 1;
                 }
             }
         }
@@ -275,8 +276,8 @@ public class Simulator {
                     this.stack.add(get.getValue(arg1));
                 } else if (Verification.isReg(arg1)) {
                     this.stack.add(registers[get.getRegisterIndex(arg1)]);
-                }else if (Verification.isVarIndirect(arg2, this)){
-                    this.stack.add(get.getValueVarIndirect(arg2, this));
+                }else if (Verification.isVarIndirect(arg1, this)){
+                    this.stack.add(get.getValueVarIndirect(arg1, this));
                 } else {
                     this.stack.add(get.getValueVar(arg1, this));
                 }
