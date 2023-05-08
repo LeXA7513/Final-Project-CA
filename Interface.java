@@ -1,14 +1,16 @@
-import java.awt.Font;
+import javax.swing.*;
+import java.io.File;
+import javax.swing.JFileChooser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import java.awt.Font;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-class Interface_test {
+class Interface {
     private static Simulator simulate = null;
     private static JButton button2, button3, button4;
     private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status;
@@ -17,83 +19,105 @@ class Interface_test {
 
         JFrame f = new JFrame("Simulator");
 
-        JLabel label = new JLabel("File Info");
-        label.setBounds(50, 0, 100, 30);
+        TitledBorder file_info_border = BorderFactory.createTitledBorder(new EtchedBorder (), "File Info");
+        TitledBorder registers_border = BorderFactory.createTitledBorder(new EtchedBorder (), "Registers");
+        TitledBorder memory_info_border = BorderFactory.createTitledBorder(new EtchedBorder (), "Memory Info");
+        
+        JPanel code_text_panel = new JPanel();
+        code_text_panel.setBounds(20, 130, 250, 110);
+
+        JPanel data_text_panel = new JPanel();
+        data_text_panel.setBounds(20, 50, 150, 80);
+
+        JPanel stack_text_panel = new JPanel();
+        stack_text_panel.setBounds(20, 155, 150, 80);
+
+        JPanel file_info_panel = new JPanel();
+        file_info_panel.setBorder(file_info_border);
+        file_info_panel.setBounds(30, 10, 300, 250);
+        file_info_panel.setLayout(null);
+
+        JPanel registers_panel = new JPanel();
+        registers_panel.setBorder(registers_border);
+        registers_panel.setBounds(30, 260, 200, 150);
+        registers_panel.setLayout(null);
+
+        JPanel memory_info_panel = new JPanel();
+        memory_info_panel.setBorder(memory_info_border);
+        memory_info_panel.setBounds(350, 10, 200, 245);
+        memory_info_panel.setLayout(null);
 
         JLabel label11 = new JLabel("File Name");
-        label11.setBounds(50, 30, 100, 30);
+        label11.setBounds(20, 20, 100, 30);
 
         file_name = new JLabel("");
-        file_name.setBounds(50, 50, 200, 30);
+        file_name.setBounds(20, 40, 200, 30);
 
         JLabel label12 = new JLabel("File Status");
-        label12.setBounds(50, 75, 100, 30);
+        label12.setBounds(20, 65, 100, 30);
 
         status = new JLabel("");
-        status.setBounds(50, 95, 250, 30);
+        status.setBounds(20, 85, 250, 30);
 
         JLabel label13 = new JLabel("Code");
-        label13.setBounds(50, 115, 100, 30);
+        label13.setBounds(20, 105, 100, 30);
 
-        JTextArea code_text = new JTextArea();
+        JTextArea code_text = new JTextArea(6,20);
         code_text.setEditable(false);
-        code_text.setBounds(50, 140, 150, 80);
 
-        JLabel label14 = new JLabel("Registers");
-        label14.setBounds(50, 230, 100, 30);
-
-        JLabel label15 = new JLabel("Next instruction");
-        label15.setBounds(50, 270, 100, 30);
-
+        JScrollPane scroll_code_text = new JScrollPane ( code_text  );
+        scroll_code_text.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+        
         JLabel label16 = new JLabel("t0");
-        label16.setBounds(50, 310, 100, 30);
+        label16.setBounds(20, 20, 100, 30);
 
         JLabel label17 = new JLabel("t1");
-        label17.setBounds(50, 330, 100, 30);
+        label17.setBounds(20, 40, 100, 30);
 
         JLabel label18 = new JLabel("t2");
-        label18.setBounds(50, 350, 100, 30);
+        label18.setBounds(20, 60, 100, 30);
 
         JLabel label19 = new JLabel("t3");
-        label19.setBounds(50, 370, 100, 30);
+        label19.setBounds(20, 80, 100, 30);
 
         JLabel label120 = new JLabel("PC");
-        label120.setBounds(50, 390, 100, 30);
+        label120.setBounds(20, 100, 100, 30);
 
         count_t0 = new JLabel("0");
-        count_t0.setBounds(200, 310, 100, 30);
+        count_t0.setBounds(170, 20, 100, 30);
 
         count_t1 = new JLabel("0");
-        count_t1.setBounds(200, 330, 100, 30);
+        count_t1.setBounds(170, 40, 100, 30);
 
         count_t2 = new JLabel("0");
-        count_t2.setBounds(200, 350, 100, 30);
+        count_t2.setBounds(170, 60, 100, 30);
 
         count_t3 = new JLabel("0");
-        count_t3.setBounds(200, 370, 100, 30);
+        count_t3.setBounds(170, 80, 100, 30);
 
         count_pc = new JLabel("0");
-        count_pc.setBounds(200, 390, 100, 30);
-
-        JLabel label20 = new JLabel("Memory Info");
-        label20.setBounds(400, 0, 100, 30);
+        count_pc.setBounds(170, 100, 100, 30);
 
         JLabel label21 = new JLabel("Variables");
-        label21.setBounds(400, 55, 100, 30);
+        label21.setBounds(20, 25, 100, 30);
 
-        JTextArea data_text = new JTextArea();
+        JTextArea data_text = new JTextArea(4,12);
         data_text.setEditable(false);
-        data_text.setBounds(400, 80, 150, 80);
+
+        JScrollPane scroll_data_text = new JScrollPane ( data_text  );
+        scroll_data_text.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS ); 
 
         JLabel label23 = new JLabel("Stack");
-        label23.setBounds(400, 160, 100, 30);
+        label23.setBounds(20, 130, 100, 30);
 
-        JTextArea stack_text = new JTextArea();
+        JTextArea stack_text = new JTextArea(4,12);
         stack_text.setEditable(false);
-        stack_text.setBounds(400, 185, 150, 80);
+
+        JScrollPane scroll_stack_text = new JScrollPane ( stack_text  );
+        scroll_stack_text.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 
         JButton button = new JButton("Load File");
-        button.setBounds(400, 280, 150, 30);
+        button.setBounds(375, 270, 150, 30);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,7 +141,7 @@ class Interface_test {
 
         button2 = new JButton("Check File");
         button2.setEnabled(false);
-        button2.setBounds(400, 320, 150, 30);
+        button2.setBounds(375, 310, 150, 30);
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -136,14 +160,13 @@ class Interface_test {
                     } catch (Exception ex) {
                         status.setText(ex.getMessage());
                     }
-
                 }
             }
         });
 
         button3 = new JButton("Simulate");
         button3.setEnabled(false);
-        button3.setBounds(400, 360, 150, 30);
+        button3.setBounds(375, 350, 150, 30);
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,14 +193,13 @@ class Interface_test {
                         status.setText(ex.getMessage());
                         System.out.println(ex.getMessage());
                     }
-
                 }
             }
         });
 
         button4 = new JButton("Step Simulation");
         button4.setEnabled(false);
-        button4.setBounds(400, 400, 150, 30);
+        button4.setBounds(375, 390, 150, 30);
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -213,12 +235,18 @@ class Interface_test {
                         status.setText(ex.getMessage());
                         System.out.println(ex.getMessage());
                     }
-
                 }
             }
         });
-
-        Font newLabelFont = new Font(label.getFont().getName(), Font.ITALIC, label.getFont().getSize());
+        
+        Font newLabelFont = new Font(label21.getFont().getName(), Font.ITALIC, label21.getFont().getSize());
+        
+        code_text_panel.add (scroll_code_text);
+        file_info_panel.add ( code_text_panel );
+        stack_text_panel.add (scroll_stack_text);
+        memory_info_panel.add ( stack_text_panel );
+        data_text_panel.add (scroll_data_text);
+        memory_info_panel.add ( data_text_panel );
 
         file_name.setFont(newLabelFont);
         count_pc.setFont(newLabelFont);
@@ -228,50 +256,37 @@ class Interface_test {
         count_t3.setFont(newLabelFont);
         status.setFont(newLabelFont);
 
-        Font newLabelFont1 = new Font(label.getFont().getName(), Font.PLAIN, label.getFont().getSize());
+        file_info_panel.add(label11);
+        file_info_panel.add(label12);
+        file_info_panel.add(label13);
+        file_info_panel.add(file_name);
+        file_info_panel.add(status);
 
-        label11.setFont(newLabelFont1);
-        label12.setFont(newLabelFont1);
-        label13.setFont(newLabelFont1);
-        label15.setFont(newLabelFont1);
-        label16.setFont(newLabelFont1);
-        label17.setFont(newLabelFont1);
-        label18.setFont(newLabelFont1);
-
-
-        f.add(label);
-        f.add(label21);
-        f.add(label11);
-        f.add(label12);
-        f.add(label13);
-        f.add(label14);
-        f.add(label15);
-        f.add(label16);
-        f.add(label17);
-        f.add(label18);
-        f.add(label19);
-        f.add(label120);
-        f.add(code_text);
-        f.add(data_text);
-        f.add(stack_text);
-        f.add(label20);
-        f.add(label21);
-        f.add(label23);
-        f.add(file_name);
-        // f.add(textArea2);
+        registers_panel.add(label16);
+        registers_panel.add(label17);
+        registers_panel.add(label18);
+        registers_panel.add(label19);
+        registers_panel.add(label120);
+        registers_panel.add(count_t0);
+        registers_panel.add(count_t1);
+        registers_panel.add(count_t2);
+        registers_panel.add(count_t3);
+        registers_panel.add(count_pc);
+        memory_info_panel.add(label21);
+        memory_info_panel.add(label23);
         f.add(button);
         f.add(button2);
         f.add(button3);
         f.add(button4);
-        f.add(count_t0);
-        f.add(count_t1);
-        f.add(count_t2);
-        f.add(count_t3);
-        f.add(count_pc);
-        f.add(status);
+        f.add(file_info_panel);
+        f.add(registers_panel);
+        f.add(memory_info_panel);
 
-        f.setSize(700, 500);
+        f.setSize(600, 500);
         f.setLayout(null);
         f.setVisible(true);
+        f.setResizable(false);
+
     }
 }
+
