@@ -199,6 +199,7 @@ class Interface {
                         }
                     } catch (Exception ex) {
                         status.setText(ex.getMessage());
+                        next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         System.out.println(ex.getMessage());
                     }
                 }
@@ -239,10 +240,12 @@ class Interface {
                             stack_text.setText(get.getStackText(simulate));
                         } else {
                             status.setText(error);
+                            next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                             System.out.println(error);
                         }
                     } catch (Exception ex) {
                         status.setText(ex.getMessage());
+                        next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         System.out.println(ex.getMessage());
                     }
                 }
