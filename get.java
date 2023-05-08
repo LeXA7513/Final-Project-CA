@@ -398,4 +398,16 @@ public class get {
         }
         return text;
     }
+
+    public static String getNextLine(Simulator simulate, int pc){
+        String text = get.getCode(simulate);
+        String doc[] = text.split(binaryConversion.fromBinaryText("00001101 00001010"));
+        for (int i = 0; i < doc.length; i++) {
+            if (i==pc) {
+                text = doc[i] ;
+                break;
+            } 
+        }
+        return text;
+    }
 }

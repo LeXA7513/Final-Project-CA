@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 class Interface {
     private static Simulator simulate = null;
     private static JButton button2, button3, button4;
-    private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status;
+    private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status, next_intstruction_text;
 
     public static void main(String[] args) {
 
@@ -39,7 +39,7 @@ class Interface {
 
         JPanel registers_panel = new JPanel();
         registers_panel.setBorder(registers_border);
-        registers_panel.setBounds(30, 260, 200, 150);
+        registers_panel.setBounds(30, 260, 220, 150);
         registers_panel.setLayout(null);
 
         JPanel memory_info_panel = new JPanel();
@@ -68,35 +68,41 @@ class Interface {
         JScrollPane scroll_code_text = new JScrollPane ( code_text  );
         scroll_code_text.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
         
+        JLabel label15 = new JLabel("Next Instruction :");
+        label15.setBounds(20, 20, 100, 30);
+
+        next_intstruction_text = new JLabel("");
+        next_intstruction_text.setBounds(20, 35, 100, 30);
+
         JLabel label16 = new JLabel("t0");
-        label16.setBounds(20, 20, 100, 30);
+        label16.setBounds(20, 60, 100, 30);
 
         JLabel label17 = new JLabel("t1");
-        label17.setBounds(20, 40, 100, 30);
+        label17.setBounds(20, 80, 100, 30);
 
         JLabel label18 = new JLabel("t2");
-        label18.setBounds(20, 60, 100, 30);
+        label18.setBounds(20, 100, 100, 30);
 
         JLabel label19 = new JLabel("t3");
-        label19.setBounds(20, 80, 100, 30);
+        label19.setBounds(20, 120, 100, 30);
 
         JLabel label120 = new JLabel("PC");
-        label120.setBounds(20, 100, 100, 30);
+        label120.setBounds(20, 140, 100, 30);
 
         count_t0 = new JLabel("0");
-        count_t0.setBounds(170, 20, 100, 30);
+        count_t0.setBounds(170, 60, 100, 30);
 
         count_t1 = new JLabel("0");
-        count_t1.setBounds(170, 40, 100, 30);
+        count_t1.setBounds(170, 80, 100, 30);
 
         count_t2 = new JLabel("0");
-        count_t2.setBounds(170, 60, 100, 30);
+        count_t2.setBounds(170, 100, 100, 30);
 
         count_t3 = new JLabel("0");
-        count_t3.setBounds(170, 80, 100, 30);
+        count_t3.setBounds(170, 120, 100, 30);
 
         count_pc = new JLabel("0");
-        count_pc.setBounds(170, 100, 100, 30);
+        count_pc.setBounds(170, 140, 100, 30);
 
         JLabel label21 = new JLabel("Variables");
         label21.setBounds(20, 25, 100, 30);
@@ -178,6 +184,7 @@ class Interface {
                         if (error == null) {
                             status.setText("Simulated Program");
                             button3.setEnabled(false);
+                            next_intstruction_text.setText("Finish");
                             count_t0.setText(String.valueOf(simulate.registers[0]));
                             count_t1.setText(String.valueOf(simulate.registers[1]));
                             count_t2.setText(String.valueOf(simulate.registers[2]));
@@ -187,6 +194,7 @@ class Interface {
                             stack_text.setText(get.getStackText(simulate));
                         } else {
                             status.setText(error);
+                            next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                             System.out.println(error);
                         }
                     } catch (Exception ex) {
@@ -216,8 +224,10 @@ class Interface {
                             data_text.setText(get.getDataText(simulate));
                             count_pc.setText(String.valueOf(simulate.pc));
                             stack_text.setText(get.getStackText(simulate));
+                            next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         } else if (error.equals("Simulated Program")) {
                             status.setText(error);
+                            next_intstruction_text.setText("Finish");
                             button3.setEnabled(false);
                             button4.setEnabled(false);
                             count_t0.setText(String.valueOf(simulate.registers[0]));
@@ -248,6 +258,7 @@ class Interface {
         data_text_panel.add (scroll_data_text);
         memory_info_panel.add ( data_text_panel );
 
+        next_intstruction_text.setFont(newLabelFont);
         file_name.setFont(newLabelFont);
         count_pc.setFont(newLabelFont);
         count_t0.setFont(newLabelFont);
@@ -262,6 +273,8 @@ class Interface {
         file_info_panel.add(file_name);
         file_info_panel.add(status);
 
+        registers_panel.add(next_intstruction_text);
+        registers_panel.add(label15);
         registers_panel.add(label16);
         registers_panel.add(label17);
         registers_panel.add(label18);
