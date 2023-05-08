@@ -7,7 +7,7 @@ import java.io.File;
 public class MyInterface extends JFrame {
 
     private static Simulator simulate = null;
-    private static JButton button2, button3, button4,button1;
+    private static JButton button2, button3, button4, button1;
     private static JLabel file_name, count_t0, count_t1, count_t2, count_t3, count_pc, status, data_text, stack_text, code_text, labelnext;
 
 
@@ -281,7 +281,7 @@ public class MyInterface extends JFrame {
         constraints14.gridy = 1;
         constraints14.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button2, constraints14);
-        button2.setEnabled(false);
+        button2.setEnabled(true);
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -311,7 +311,7 @@ public class MyInterface extends JFrame {
         constraints15.gridy = 2;
         constraints15.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button3, constraints15);
-        button3.setEnabled(false);
+        button3.setEnabled(true);
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -349,7 +349,7 @@ public class MyInterface extends JFrame {
         constraints16.gridy = 3;
         constraints16.insets = new Insets(10, 0, 10, 0);
         buttonPanel.add(button4, constraints16);
-        button4.setEnabled(false);
+        button4.setEnabled(true);
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

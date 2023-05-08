@@ -1,9 +1,12 @@
-import javax.swing.*;
-import java.io.File;
-import javax.swing.JFileChooser;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Font;
+import java.io.File;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
 
 class Interface_test {
     private static Simulator simulate = null;
@@ -226,9 +229,14 @@ class Interface_test {
         status.setFont(newLabelFont);
 
         Font newLabelFont1 = new Font(label.getFont().getName(), Font.PLAIN, label.getFont().getSize());
+
         label11.setFont(newLabelFont1);
         label12.setFont(newLabelFont1);
-       
+        label13.setFont(newLabelFont1);
+        label15.setFont(newLabelFont1);
+        label16.setFont(newLabelFont1);
+        label17.setFont(newLabelFont1);
+        label18.setFont(newLabelFont1);
 
 
         f.add(label);
