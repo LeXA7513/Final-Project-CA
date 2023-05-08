@@ -195,12 +195,26 @@ class Interface {
                         } else {
                             status.setText(error);
                             next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
                             System.out.println(error);
                         }
                     } catch (Exception ex) {
                         button3.setEnabled(false);
                         button4.setEnabled(false);
                         status.setText(ex.getMessage());
+                        count_t0.setText(String.valueOf(simulate.registers[0]));
+                        count_t1.setText(String.valueOf(simulate.registers[1]));
+                        count_t2.setText(String.valueOf(simulate.registers[2]));
+                        count_t3.setText(String.valueOf(simulate.registers[3]));
+                        data_text.setText(get.getDataText(simulate));
+                        count_pc.setText(String.valueOf(simulate.pc));
+                        stack_text.setText(get.getStackText(simulate));
                         next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         System.out.println(ex.getMessage());
                     }
@@ -242,12 +256,26 @@ class Interface {
                             stack_text.setText(get.getStackText(simulate));
                         } else {
                             status.setText(error);
+                            count_t0.setText(String.valueOf(simulate.registers[0]));
+                            count_t1.setText(String.valueOf(simulate.registers[1]));
+                            count_t2.setText(String.valueOf(simulate.registers[2]));
+                            count_t3.setText(String.valueOf(simulate.registers[3]));
+                            data_text.setText(get.getDataText(simulate));
+                            count_pc.setText(String.valueOf(simulate.pc));
+                            stack_text.setText(get.getStackText(simulate));
                             next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                             System.out.println(error);
                         }
                     } catch (Exception ex) {
                         button3.setEnabled(false);
                         button4.setEnabled(false);
+                        count_t0.setText(String.valueOf(simulate.registers[0]));
+                        count_t1.setText(String.valueOf(simulate.registers[1]));
+                        count_t2.setText(String.valueOf(simulate.registers[2]));
+                        count_t3.setText(String.valueOf(simulate.registers[3]));
+                        data_text.setText(get.getDataText(simulate));
+                        count_pc.setText(String.valueOf(simulate.pc));
+                        stack_text.setText(get.getStackText(simulate));
                         status.setText(ex.getMessage());
                         next_intstruction_text.setText(get.getNextLine(simulate, simulate.pc));
                         System.out.println(ex.getMessage());

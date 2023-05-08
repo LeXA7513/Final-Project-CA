@@ -284,6 +284,9 @@ public class Simulator {
                 return 5;
 
             case "POP":
+                if (this.stack.size()==0){
+                    throw new Exception("Inpossible command : Stack is Empty");
+                }
                 registers[get.getRegisterIndex(arg1)] = Integer.valueOf(this.stack.get(this.stack.size() - 1));
                 this.stack.remove(this.stack.size() - 1);
                 return 6;
